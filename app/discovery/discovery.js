@@ -1,14 +1,17 @@
-import React from "react";
+import { validateCheckIn } from "../../api-client-service";
+import React, { useState } from "react";
 import MapView from "react-native-maps";
 import { Link } from "expo-router";
 import { Image } from "expo-image";
 import { Text, View, StyleSheet, Button, Pressable } from "react-native";
 import { useFonts, Montserrat_400Regular } from "@expo-google-fonts/montserrat";
-import { validateCheckIn } from "../../api-client-service";
-import * as Location from "expo-location";
 import { Marker } from "react-native-maps";
+import * as Location from "expo-location";
+import * as WebBrowser from "expo-web-browser";
 
 export default function Discovery() {
+  const [result, setResult] = useState(null);
+
   const dayDictionary = new Map();
   dayDictionary.set("0", 7);
   dayDictionary.set("1", 6);
@@ -35,11 +38,16 @@ export default function Discovery() {
     });
 
     // let outcome = await successCheck.json();
-    console.log(typeof successCheck);
+    // console.log(typeof successCheck);
 
     successCheck
       ? alert("We've checked you in!")
       : alert("Sorry, you don't appear to be close enough...");
+  }
+
+  async function _handleExternalMap() {
+    let result = await WebBrowser.openBrowserAsync("https://youtube.com");
+    setResult(result);
   }
 
   return (
@@ -65,7 +73,20 @@ export default function Discovery() {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-      />
+      >
+        <Marker
+          coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
+          onPress={_handleExternalMap}
+        />
+        {/* {this.state.markers.map((marker, index) => (
+          <Marker
+            key={index}
+            coordinate={marker.latlng}
+            title={marker.title}
+            description={marker.description}
+          />
+        ))} */}
+      </MapView>
 
       {/* Restaurant Description */}
       <View style={styles.restaurantDescriptionContainer}>
