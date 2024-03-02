@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "http://10.10.22.21:3000";
 
 export async function fetchOrderedArrayOfStations(line) {
   let stations = await fetch(
@@ -15,3 +15,19 @@ export async function fetchOrderedArrayOfStations(line) {
 //   stations = stations.filter((stationList) => stationList.commonName);
 //   stations.forEach((station) => console.log(station.commonName));
 // }
+
+export async function validateCheckIn(coordData) {
+  let res = await fetch(`${BASE_URL}/validate-coordinates`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      lat: coordData.lat,
+      lon: coordData.lon,
+      venueLon: coordData.venueLon,
+      venueLat: coordData.venueLat,
+    }),
+  });
+
+  let parsedRes = await res.json();
+  return parsedRes.success;
+}
