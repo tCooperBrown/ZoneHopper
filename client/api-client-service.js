@@ -41,7 +41,7 @@ export async function getAllTubeLines() {
 }
 
 export async function validateCheckIn(coordData) {
-  let res = await fetch(`${tflBASE_URL}/validate-coordinates`, {
+  let res = await fetch(`${BASE_URL}/validate-coordinates`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
