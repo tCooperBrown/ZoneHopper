@@ -3,6 +3,7 @@ const geolib = require("geolib");
 const Station = require("../model/station");
 const { Query } = require("mongoose");
 const Venue = require("../model/venue");
+const User = require("../model/user");
 require("dotenv").config();
 
 async function queryPhotoCache(req, res) {
