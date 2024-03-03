@@ -1,8 +1,4 @@
 import { StyleSheet, View, Text } from "react-native";
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
 import { StatusBar } from "expo-status-bar";
 import { useStore } from "zustand";
 
@@ -11,7 +7,6 @@ import PrimaryStations from "../../components/primary-stations";
 import DiscoveryButton from "../../components/discovery-button";
 
 const PrimaryScreen = () => {
-  // const insets = useSafeAreaInsets();
   return (
     <View>
       <View style={styles.container}>

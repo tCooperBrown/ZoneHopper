@@ -11,7 +11,7 @@ export async function fetchOrderedArrayOfStations(line) {
 }
 
 export async function informPreferredLine(line) {
-  await fetch(`${BASE_URL}/user/update`, {
+  await fetch(`${BASE_URL}/user/update-line`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

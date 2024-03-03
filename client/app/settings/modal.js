@@ -3,7 +3,7 @@ import { Link, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { create } from "zustand";
 import { useLineStore } from "../../components/upper-bar";
-import { getAllTubeLines } from "../../api-client-service";
+import { getAllTubeLines, informPreferredLine } from "../../api-client-service";
 import { useEffect } from "react";
 
 const useAllLinesStore = create((set) => ({
@@ -11,13 +11,13 @@ const useAllLinesStore = create((set) => ({
   updateAllLines: (newLinesArray) => set({ allLines: newLinesArray }),
   clearLines: () => set({ allLines: [] }),
 }));
+// Above Store might be ready for removal. COME BACK TO THIS.
 
 export default function Modal() {
   const allLines = useAllLinesStore((state) => state.allLines);
   const activeLine = useLineStore((state) => state.line);
   const updateAllLines = useAllLinesStore((state) => state.updateAllLines);
   const updateActiveLine = useLineStore((state) => state.updateActiveLine);
-  let hasChosen = false;
 
   useEffect(() => {
     function doOnce() {
@@ -32,7 +32,8 @@ export default function Modal() {
 
   function onPress(selectedLine) {
     updateActiveLine(selectedLine);
-    hasChosen = true;
+    informPreferredLine(selectedLine);
+    console.log("selectedLine", selectedLine);
   }
 
   // If the page was reloaded or navigated to directly, then the modal should be presented as
