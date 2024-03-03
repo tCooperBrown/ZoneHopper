@@ -1,6 +1,5 @@
-import { Link, Redirect } from "expo-router";
+import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function Home() {
   return (

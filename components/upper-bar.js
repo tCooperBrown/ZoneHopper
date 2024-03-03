@@ -3,6 +3,7 @@ import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import { create } from "zustand";
+import tubeLineColours from "../tubeLineColours";
 
 export const useStreakStore = create((set) => ({
   streak: 0,
@@ -40,7 +41,12 @@ export default function UpperBar() {
 
         <View style={styles.innerContainer}>
           <Text style={styles.text}>Line: </Text>
-          <View style={styles.activeLine}>
+          <View
+            style={[
+              styles.activeLine,
+              { backgroundColor: tubeLineColours[line] },
+            ]}
+          >
             <Text style={styles.text}>{line}</Text>
           </View>
 
@@ -111,7 +117,7 @@ const styles = StyleSheet.create({
   activeLine: {
     height: 20,
     width: 70,
-    backgroundColor: "#8b4e26",
+    // backgroundColor: "#8b4e26",
   },
   settings: {
     flexGrow: 1,
