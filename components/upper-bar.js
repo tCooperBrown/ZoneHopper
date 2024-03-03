@@ -15,7 +15,7 @@ export const useStreakStore = create((set) => ({
 }));
 
 export const useLineStore = create((set) => ({
-  line: "Bakerloo",
+  line: "bakerloo",
   updateActiveLine: (newLine) => set({ line: newLine }),
 }));
 

@@ -7,7 +7,6 @@ import { fetchOrderedArrayOfStations } from "../api-client-service";
 import { useEffect } from "react";
 import "react-native-get-random-values";
 import { v4 as uuid4 } from "uuid";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const useStationsStore = create((set) => ({
   stations: [],
