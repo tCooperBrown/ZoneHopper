@@ -221,7 +221,7 @@ async function getNearbyVenues(req, res) {
   // --------------------------------------------------------
 
   if (preExistingVenues.length > 0) {
-    console.log("You triggered the if statement");
+    console.log("Serving you some cached suitable venues...");
     res.send(preExistingVenues);
   } else {
     try {
