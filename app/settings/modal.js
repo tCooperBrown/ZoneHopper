@@ -17,7 +17,7 @@ export default function Modal() {
   const activeLine = useLineStore((state) => state.line);
   const updateAllLines = useAllLinesStore((state) => state.updateAllLines);
   const updateActiveLine = useLineStore((state) => state.updateActiveLine);
-  //   const updateLine = useLineStore()
+  let hasChosen = false;
 
   useEffect(() => {
     function doOnce() {
@@ -32,6 +32,7 @@ export default function Modal() {
 
   function onPress(selectedLine) {
     updateActiveLine(selectedLine);
+    hasChosen = true;
   }
 
   // If the page was reloaded or navigated to directly, then the modal should be presented as
@@ -41,10 +42,16 @@ export default function Modal() {
       {/* Use `../` as a simple way to navigate to the root. This is not analogous to "goBack". */}
 
       {allLines.map((line, index) => (
-        <Pressable onPress={() => onPress(line)} key={index}>
-          <Text style={styles.text}>{line}</Text>
-        </Pressable>
+        <Link href={"../"} key={index} asChild>
+          <Pressable onPress={() => onPress(line)}>
+            <View style={styles.stationButton}>
+              <Text style={styles.text}>{line}</Text>
+            </View>
+          </Pressable>
+        </Link>
       ))}
+
+      {/* {!hasChosen && <Link href="../"></Link>} */}
 
       {/* Native modals have dark backgrounds on iOS, set the status bar to light content. */}
       <StatusBar style="light" />
@@ -56,15 +63,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000439",
+    gap: 10,
+    alignItems: "center",
+    paddingTop: 20,
     // alignItems: "center",
     // justifyContent: "center",
-    // paddingTop: 20,
-    // paddingLeft: 20,
     // paddingRight: 20,
   },
   text: {
     color: "white",
-    fontSize: 40,
+    fontSize: 30,
+  },
+  stationButton: {
+    backgroundColor: "#5758C1",
+    borderRadius: 5,
+    width: 320,
+    alignItems: "center",
+    paddingTop: 5,
+    paddingBottom: 5,
   },
 });
 
