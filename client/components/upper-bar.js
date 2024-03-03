@@ -4,6 +4,8 @@ import { StyleSheet, Text, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 import { create } from "zustand";
 import tubeLineColours from "../tubeLineColours";
+import { informPreferredLine } from "../api-client-service";
+import { useEffect } from "react";
 
 export const useStreakStore = create((set) => ({
   streak: 0,
@@ -33,6 +35,13 @@ export default function UpperBar() {
 
   const circleSize = 40;
   const circleRadius = circleSize / 2;
+
+  useEffect(() => {
+    async function onRender() {
+      await informPreferredLine(line);
+    }
+    onRender();
+  }, []);
 
   return (
     <>

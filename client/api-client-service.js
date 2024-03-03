@@ -1,5 +1,3 @@
-import { useLineStore } from "./components/upper-bar";
-
 const BASE_URL = "http://192.168.1.201:3000"; // You cannot use localhost for testing purposes. Instead use your server's subnet address. Ignore: http://10.10.22.21:3000, http://192.168.1.201:3000
 const tflBASE_URL = "https://api.tfl.gov.uk";
 
