@@ -45,7 +45,7 @@ export default function UpperBar() {
           </View>
 
           <View style={styles.settings}>
-            <Link href="/settings/settings" asChild>
+            <Link href="/settings" asChild>
               <Svg width={circleSize} height={circleSize}>
                 {/* Render the bigger white circle as backdrop */}
                 <Circle
