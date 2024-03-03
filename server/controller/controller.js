@@ -6,6 +6,19 @@ const Venue = require("../model/venue");
 const User = require("../model/user");
 require("dotenv").config();
 
+async function updateUserLine(req, res) {
+  const { activeLine } = req.body;
+  // console.log(activeLine);
+  const update = await User.findOneAndUpdate({}, { activeLine: activeLine });
+  res.send(update); // Sends doc just prior to update by default - expected behaviour.
+}
+
+// Return to this function once implementing real checkin.
+async function updateUserVisitedStations() {
+  const { visitedStations } = req.body;
+  //  SEE NOTE - RETURN LATER.
+}
+
 async function queryPhotoCache(req, res) {
   const placeId = req.params.id;
 
@@ -298,6 +311,7 @@ module.exports = {
   retrieveCachedStations,
   validateCoordSubmission,
   getNearbyVenues,
+  updateUserLine,
 };
 
 // 1. Check venues collection for any docs against "assignedStation".

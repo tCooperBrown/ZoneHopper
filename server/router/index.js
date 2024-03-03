@@ -4,6 +4,7 @@ const stationRouter = require("./station-router");
 const venueRouter = require("./venue-router");
 const venuePoolRouter = require("./venue-pool-router");
 const discoveryRouter = require("./discovery-router");
+const userRouter = require("./user-router");
 
 // router.get("/placePhoto/:id", controller.queryPhotoCache);
 
@@ -17,6 +18,7 @@ const setRouting = (app) => {
   app.use("/validate-coordinates", venueRouter);
   app.use("/venue-pool", venuePoolRouter);
   app.use("/discover", discoveryRouter);
+  app.use("/user", userRouter);
   app.use(rootRouter);
 };
 module.exports = setRouting;

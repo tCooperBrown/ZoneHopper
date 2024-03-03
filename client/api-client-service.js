@@ -10,6 +10,18 @@ export async function fetchOrderedArrayOfStations(line) {
   return stations;
 }
 
+export async function informPreferredLine(line) {
+  await fetch(`${BASE_URL}/user/update`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      activeLine: line,
+    }),
+  });
+}
+
 // Ignore below - old -----------------------------------------------------------------/
 
 // export async function fetchStationsByLine(line) {
