@@ -12,6 +12,7 @@ export default function Layout() {
         name="modal"
         options={{
           presentation: "modal",
+          title: "Preferred Line",
         }}
       />
     </Stack>
