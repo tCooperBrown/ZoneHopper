@@ -29,6 +29,7 @@ discoveryRouter.get("/", async (req, res) => {
 
       user.currentDiscoveryStation = randomStation;
       user.lastDiscoveryUpdate = Date.now();
+      user.currentDiscoveryVenues = nearbyVenues;
       await user.save();
 
       res.json({ station: randomStation, venues: nearbyVenues });
