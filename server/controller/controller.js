@@ -240,19 +240,26 @@ async function getNearbyVenues(req, res) {
                 latitude: stationLat,
                 longitude: stationLon,
               },
-              radius: 700,
+              radius: 500,
             },
           },
           languageCode: "en",
           includedTypes: ["bar", "cafe", "tourist_attraction"],
-          maxResultCount: 1,
+          maxResultCount: 5,
           rankPreference: "POPULARITY",
         }),
       });
 
       parsedResponse = await response.json();
 
-      parsedResponse.places.forEach((placeObj, index) => {
+      // Some places don't have editorialSummaries so filter them out to avoid DB validation errors.
+      parsedResponse = await parsedResponse.places.filter(
+        (placeObj) => placeObj.editorialSummary,
+      );
+      console.log(parsedResponse);
+
+      // NOTE: Do not worry if you get a console error due to missing fields. Error is caught and next place will be processed for caching.
+      parsedResponse.forEach((placeObj, index) => {
         Venue.create({
           assignedStation: stationName,
           challenge: false,
