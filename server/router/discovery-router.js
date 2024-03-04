@@ -112,7 +112,11 @@ async function findNearbyVenues(requestObj) {
           formattedAddress: placeObj.formattedAddress,
         }).catch((err) => console.error(err));
       });
-      return parsedResponse;
+
+      let newVenues = Venue.find({
+        assignedStation: stationName,
+      });
+      return newVenues;
     } catch (error) {
       console.error(error);
     }
