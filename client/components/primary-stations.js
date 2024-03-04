@@ -292,9 +292,7 @@ export default function PrimaryStations() {
           style={[
             styles.vertLineContainer,
             { backgroundColor: tubeLineColours[activeLine] },
-            {
-              height: stations.length * 60,
-            },
+            { height: stations.length * 75 },
           ]}
         ></View>
 
@@ -333,10 +331,12 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   scrollContainer: {
+    paddingTop: 15,
     paddingLeft: 20,
     paddingRight: 20,
   },
   vertLineContainer: {
+    flex: 1,
     width: 18,
     borderRadius: 10,
     position: "absolute",
@@ -347,6 +347,18 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
 });
+
+{
+  /* <View
+  style={[
+    styles.vertLineContainer,
+    { backgroundColor: tubeLineColours[activeLine] },
+    {
+      height: stations.length * 60,
+    },
+  ]}
+></View>; */
+}
 
 // {
 //       __v: 0,

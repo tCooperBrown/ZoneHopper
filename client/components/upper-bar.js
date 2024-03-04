@@ -49,7 +49,7 @@ export default function UpperBar() {
         <Text style={styles.text}>Completion: {percentage}%</Text>
 
         <View style={styles.innerContainer}>
-          <Text style={styles.text}>Line: </Text>
+          <Text style={[styles.text, { paddingTop: 5 }]}>Line: </Text>
           <View
             style={[
               styles.activeLine,
@@ -96,7 +96,7 @@ export default function UpperBar() {
 
       {/* Streak Counter */}
       <View style={styles.streakContainer}>
-        <Text style={styles.text}>Streak: </Text>
+        <Text style={[styles.text, { paddingTop: 5 }]}>Streak: </Text>
         <View style={styles.dynamicStreak}>
           <Text style={[styles.text, { color: "#000" }]}>{streak} weeks</Text>
         </View>
@@ -119,13 +119,23 @@ const styles = StyleSheet.create({
   outerContainer: {
     flexDirection: "column",
     alignItems: "flex-start",
+    paddingLeft: 20,
+    gap: 5,
+    paddingTop: 5,
   },
   innerContainer: {
     flexDirection: "row",
+    // backgroundColor: "white",
+    paddingRight: 20,
   },
   activeLine: {
-    height: 20,
-    width: 70,
+    // height: 20,
+    // width: 70,
+    justifyContent: "center",
+    paddingLeft: 20,
+    paddingRight: 20,
+    borderRadius: 5,
+    marginLeft: 10,
     // backgroundColor: "#8b4e26",
   },
   settings: {
@@ -138,16 +148,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     marginTop: 10,
+    paddingRight: 20,
   },
   dynamicStreak: {
-    height: 20,
-    width: 70,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
     backgroundColor: "#95e9f1",
     borderRadius: 5,
   },
   text: {
     color: "#FFF",
     textAlign: "center",
+    fontSize: 22,
     // backgroundColor: "red",
   },
 });
