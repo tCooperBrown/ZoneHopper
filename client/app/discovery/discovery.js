@@ -171,7 +171,7 @@ export default function Discovery() {
         <Text></Text>
       )}
 
-      {/* Restaurant Description */}
+      {/* Venue Description */}
       <View style={styles.restaurantDescriptionContainer}>
         <Text style={styles.text}>{discoveryStationState.name}</Text>
         <Text style={styles.text}>
@@ -190,15 +190,36 @@ export default function Discovery() {
         <Image style={styles.image} source={imageURL} />
       </View>
       {/* Check In Button! */}
-      <Pressable style={styles.button} onPress={onPress}>
-        <Text style={styles.text}>Check In!</Text>
-      </Pressable>
+
+      <View style={styles.bottomBar}>
+        <Pressable style={styles.button} onPress={onPress}>
+          <View style={styles.checkInButton}>
+            <Text style={styles.text}>Check In!</Text>
+          </View>
+        </Pressable>
+      </View>
       {/* end of master container View */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  bottomBar: {
+    flexDirection: "row",
+    backgroundColor: "#040FAB",
+    paddingLeft: 40,
+    // justifyContent: "center",
+  },
+  checkInButton: {
+    backgroundColor: "#7C7CCC",
+    height: 70,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+
   daysLeft: {
     justifyContent: "center",
   },
@@ -216,12 +237,11 @@ const styles = StyleSheet.create({
     // fontFamily: "Montserrat_400Regular",
   },
   container: {
-    backgroundColor: "blue", //
     flex: 1,
   },
   upperBarContainer: {
     flexDirection: "row",
-    backgroundColor: "green", //
+    backgroundColor: "#040FAB",
     justifyContent: "space-between",
     paddingLeft: 30,
     paddingRight: 30,
@@ -236,7 +256,7 @@ const styles = StyleSheet.create({
     height: "23%",
     padding: 20,
     gap: 10,
-    backgroundColor: "orange",
+    backgroundColor: "#040FAB",
   },
   image: {
     flex: 1,
