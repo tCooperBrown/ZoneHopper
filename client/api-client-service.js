@@ -1,4 +1,4 @@
-const BASE_URL = "http://192.168.1.201:3000"; // You cannot use localhost for testing purposes. Instead use your server's subnet address. Ignore: http://10.10.22.21:3000, http://192.168.1.201:3000
+const BASE_URL = "http://10.10.22.220:3000"; // You cannot use localhost for testing purposes. Instead use your server's subnet address. Ignore: http://10.10.22.21:3000, http://192.168.1.201:3000
 const tflBASE_URL = "https://api.tfl.gov.uk";
 
 export async function fetchOrderedArrayOfStations(line) {
@@ -57,7 +57,13 @@ export async function validateCheckIn(coordData) {
 }
 
 // I'm going to get the stationLon, stationLat from the backend rather than doing it here.
-export async function getDiscoveryVenues(activeLineStations) {
+export async function getDiscoveryVenues() {
+  // This first API call just triggers a refresh of the discovery venues if needed.
+  let res = await fetch(`${BASE_URL}/discover`);
+
+  return await res.json();
+  // This next API call queries the venue data.
+
   ////////////////////
   // let randomStationIndex = Math.floor(
   //   Math.random() * activeLineStations.length,
@@ -73,6 +79,7 @@ export async function getDiscoveryVenues(activeLineStations) {
   // );
 }
 
+// getDiscoveryVenues();
 ////////////DUMP - DISREGARD //////////////////////////////
 
 // I build the linesArray w/ the TFL API in the settings modal but short for time so it's static here.

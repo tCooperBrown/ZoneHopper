@@ -175,7 +175,7 @@ async function validateCoordSubmission(req, res) {
           longitude: venueCoords.lon,
           latitude: venueCoords.lat,
         },
-        500,
+        100,
       )
     ) {
       try {
@@ -254,7 +254,7 @@ async function getNearbyVenues(req, res) {
                 latitude: stationLat,
                 longitude: stationLon,
               },
-              radius: 500,
+              radius: 1000,
             },
           },
           languageCode: "en",

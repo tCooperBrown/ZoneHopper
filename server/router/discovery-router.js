@@ -32,10 +32,15 @@ discoveryRouter.get("/", async (req, res) => {
       user.currentDiscoveryVenues = nearbyVenues;
       await user.save();
 
-      res.json({ station: randomStation, venues: nearbyVenues });
+      res.json({
+        currentDiscoveryStation: randomStation,
+        currentDiscoveryVenues: nearbyVenues,
+        message: "new venues attached",
+      });
     } else {
       res.json({
-        station: user.currentDiscovery,
+        currentDiscoveryStation: user.currentDiscoveryStation,
+        currentDiscoveryVenues: user.currentDiscoveryVenues,
         message: "Suggestion remains the same this week",
       });
     }
@@ -72,7 +77,7 @@ async function findNearbyVenues(requestObj) {
                 latitude: stationLat,
                 longitude: stationLon,
               },
-              radius: 500,
+              radius: 1000,
             },
           },
           languageCode: "en",

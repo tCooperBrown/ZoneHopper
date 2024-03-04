@@ -240,19 +240,13 @@ export const useStationsStore = create((set) => ({
   clearStations: () => set({ stations: [] }),
 }));
 
-export const useDiscoveryVenueStore = create((set) => ({
-  discoveryVenue: {},
-  updateDiscoveryVenue: (newDiscoveryVenue) =>
-    set({ discoveryVenue: newDiscoveryVenue }),
-}));
-
 export default function PrimaryStations() {
-  const discoveryVenue = useDiscoveryVenueStore(
-    (state) => state.discoveryVenue,
-  );
-  const updateDiscoveryVenue = useDiscoveryVenueStore(
-    (state) => state.updateDiscoveryVenue,
-  );
+  // const discoveryVenue = useDiscoveryVenueStore(
+  //   (state) => state.discoveryVenue,
+  // );
+  // const updateDiscoveryVenue = useDiscoveryVenueStore(
+  //   (state) => state.updateDiscoveryVenue,
+  // );
   const stations = useStationsStore((state) => state.stations);
   const updateStations = useStationsStore((state) => state.updateStations);
 
@@ -270,14 +264,14 @@ export default function PrimaryStations() {
 
       // Populate discoveryVenueState if empty
 
-      if (!discoveryVenue.hasOwnProperty("name")) {
-        let randomStationIndex = Math.floor(Math.random() * stations.length);
-        let randomStation = stations[randomStationIndex];
+      // if (!discoveryVenue.hasOwnProperty("name")) {
+      //   let randomStationIndex = Math.floor(Math.random() * stations.length);
+      //   let randomStation = stations[randomStationIndex];
 
-        console.log(randomStation);
+      //   console.log(randomStation);
 
-        updateDiscoveryVenue(randomStation);
-      }
+      //   updateDiscoveryVenue(randomStation);
+      // }
     };
     doOnce();
   }, []);

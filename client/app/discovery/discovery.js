@@ -1,4 +1,4 @@
-import { validateCheckIn } from "../../api-client-service";
+import { getDiscoveryVenues, validateCheckIn } from "../../api-client-service";
 import React, { useEffect, useState } from "react";
 import MapView from "react-native-maps";
 import { Link } from "expo-router";
@@ -8,11 +8,36 @@ import { useFonts, Montserrat_400Regular } from "@expo-google-fonts/montserrat";
 import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import * as WebBrowser from "expo-web-browser";
+import { create } from "zustand";
+
+export const useDiscoveryVenueStore = create((set) => ({
+  discoveryVenues: [],
+  updateDiscoveryVenue: (newDiscoveryVenue) =>
+    set({ discoveryVenue: newDiscoveryVenue }),
+}));
+export const useDiscoveryStationStore = create((set) => ({
+  discoveryStation: {},
+  updateDiscoveryStation: (newDiscoveryStation) =>
+    set({ discoveryStation: newDiscoveryStation }),
+}));
 
 export default function Discovery() {
   const [result, setResult] = useState(null);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const updateDiscoveryVenueState = useDiscoveryVenueStore(
+    (state) => state.updateDiscoveryVenues,
+  );
+  const discoveryVenueState = useDiscoveryVenueStore(
+    (state) => state.discoveryVenues,
+  );
+
+  const updateDiscoveryStationState = useDiscoveryStationStore(
+    (state) => state.updateDiscoveryStation,
+  );
+  const discoveryStationState = useDiscoveryStationStore(
+    (state) => state.discoveryStation,
+  );
 
   useEffect(() => {
     (async () => {
@@ -21,13 +46,16 @@ export default function Discovery() {
         setErrorMsg("Permission to access location was denied");
         return;
       }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-      console.log(location);
+      const { currentDiscoveryVenues, currentDiscoveryStation } =
+        await getDiscoveryVenues();
+      updateDiscoveryVenueState([...currentDiscoveryVenues[0]]);
+      updateDiscoveryStationState(currentDiscoveryStation);
+      console.log("currentDiscoveryVenues: ", currentDiscoveryVenues);
+      console.log("currentDiscoveryStation: ", currentDiscoveryStation);
     })();
   }, []);
 
+  // I'm going to update this. The backend now starts the clock at any given day/time. Counting days of the week here needs to go.
   const dayDictionary = new Map();
   dayDictionary.set("0", 1);
   dayDictionary.set("1", 7);
@@ -45,18 +73,23 @@ export default function Discovery() {
   const imageURL = "https://picsum.photos/seed/696/3000/2000";
 
   async function onPress() {
-    console.log("onpress location", location);
+    // alert("Checking you in...");
+
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+    // console.log(location);
     let successCheck = await validateCheckIn({
       lat: location.coords.latitude,
       lon: location.coords.longitude,
-      venueLat: 51.497967,
-      venueLon: -0.048177,
+      venueLat: discoveryStationState.lat,
+      venueLon: discoveryStationState.lon,
     });
 
     // let outcome = await successCheck.json();
-    // console.log(typeof successCheck);
+    console.log("discoveryStationState: ", discoveryStationState);
+    console.log("discoveryVenueState: ", discoveryVenueState);
 
-    successCheck
+    (await successCheck)
       ? alert("We've checked you in!")
       : alert("Sorry, you don't appear to be close enough...");
   }
@@ -78,22 +111,23 @@ export default function Discovery() {
           Days Left: {dayDictionary.get(new Date().getDay().toString())}
         </Text>
       </View>
-
       {/* Maps */}
-
       <MapView
         style={styles.map}
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
+          latitude: 51.51570902111879,
+          longitude: -0.13319449527961477,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
       >
-        <Marker
-          coordinate={{ latitude: 37.78825, longitude: -122.4324 }}
+        {/* <Marker
+          coordinate={{
+            latitude: 51.51570902111879,
+            longitude: -0.13319449527961477,
+          }}
           onPress={_handleExternalMap}
-        />
+        /> */}
         {/* {this.state.markers.map((marker, index) => (
           <Marker
             key={index}
@@ -103,14 +137,12 @@ export default function Discovery() {
           />
         ))} */}
       </MapView>
-
       {/* Restaurant Description */}
       <View style={styles.restaurantDescriptionContainer}>
         <Text style={styles.text}>{nearestStation}</Text>
         <Text style={styles.text}>{venueName}</Text>
         <Text style={styles.text}>{venueDescription}</Text>
       </View>
-
       {/* Restaurant Images */}
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={imageURL} />
@@ -119,7 +151,6 @@ export default function Discovery() {
       <Pressable style={styles.button} onPress={onPress}>
         <Text style={styles.text}>Check In!</Text>
       </Pressable>
-
       {/* end of master container View */}
     </View>
   );
