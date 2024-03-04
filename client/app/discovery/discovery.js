@@ -132,7 +132,9 @@ export default function Discovery() {
   }
 
   async function _handleExternalMap() {
-    let result = await WebBrowser.openBrowserAsync("https://youtube.com");
+    let result = await WebBrowser.openBrowserAsync(
+      discoveryVenueState[0].googleMapsUri,
+    );
     setResult(result);
   }
 
@@ -140,13 +142,18 @@ export default function Discovery() {
     <View style={styles.container}>
       {/* upperbar container */}
       <View style={styles.upperBarContainer}>
-        <Link replace href="/primary/primary">
-          <Text style={styles.text}>Back to primary</Text>
-        </Link>
+        {/* Back Button */}
+        <View style={styles.backButton}>
+          <Link replace href="/primary/primary">
+            <Text style={styles.text}>Back</Text>
+          </Link>
+        </View>
 
-        <Text>
-          Days Left: {dayDictionary.get(new Date().getDay().toString())}
-        </Text>
+        <View style={styles.daysLeft}>
+          <Text style={styles.text}>
+            Days Left: {dayDictionary.get(new Date().getDay().toString())}
+          </Text>
+        </View>
       </View>
       {/* Maps */}
 
@@ -192,6 +199,17 @@ export default function Discovery() {
 }
 
 const styles = StyleSheet.create({
+  daysLeft: {
+    justifyContent: "center",
+  },
+  backButton: {
+    height: 50,
+    width: 80,
+    backgroundColor: "#5758C1",
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   text: {
     color: "white",
     fontSize: 18,
@@ -205,6 +223,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "green", //
     justifyContent: "space-between",
+    paddingLeft: 30,
+    paddingRight: 30,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   map: {
     width: "100%",
