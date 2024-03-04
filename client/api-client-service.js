@@ -60,8 +60,13 @@ export async function validateCheckIn(coordData) {
 export async function getDiscoveryVenues() {
   // This first API call just triggers a refresh of the discovery venues if needed.
   let res = await fetch(`${BASE_URL}/discover`);
+  res = await res.json();
+  // console.log(res.currentDiscoveryStation.lat);
+  // console.log(res.currentDiscoveryStation.lon);
+  // console.log("API SERVICE", res);
 
-  return await res.json();
+  // console.log("111111111111111111111111111111111111111111111111111111");
+  return res;
   // This next API call queries the venue data.
 
   ////////////////////
@@ -78,6 +83,7 @@ export async function getDiscoveryVenues() {
   //   `${BASE_URL}/venue-pool?stationLon=${stationLon}&stationLat=${stationLat}&stationName=${stationName}`,
   // );
 }
+getDiscoveryVenues();
 
 // getDiscoveryVenues();
 ////////////DUMP - DISREGARD //////////////////////////////

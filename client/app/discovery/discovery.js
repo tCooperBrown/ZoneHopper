@@ -12,11 +12,11 @@ import { create } from "zustand";
 
 export const useDiscoveryVenueStore = create((set) => ({
   discoveryVenues: [],
-  updateDiscoveryVenue: (newDiscoveryVenue) =>
-    set({ discoveryVenue: newDiscoveryVenue }),
+  updateDiscoveryVenues: (newDiscoveryVenue) =>
+    set({ discoveryVenues: newDiscoveryVenue }),
 }));
 export const useDiscoveryStationStore = create((set) => ({
-  discoveryStation: {},
+  discoveryStation: [],
   updateDiscoveryStation: (newDiscoveryStation) =>
     set({ discoveryStation: newDiscoveryStation }),
 }));
@@ -25,19 +25,20 @@ export default function Discovery() {
   const [result, setResult] = useState(null);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const updateDiscoveryVenueState = useDiscoveryVenueStore(
+  const updateDiscoveryVenues = useDiscoveryVenueStore(
     (state) => state.updateDiscoveryVenues,
   );
   const discoveryVenueState = useDiscoveryVenueStore(
     (state) => state.discoveryVenues,
   );
-
   const updateDiscoveryStationState = useDiscoveryStationStore(
     (state) => state.updateDiscoveryStation,
   );
   const discoveryStationState = useDiscoveryStationStore(
     (state) => state.discoveryStation,
   );
+
+  // console.log("discovery venue state", discoveryVenueState);
 
   useEffect(() => {
     (async () => {
@@ -48,10 +49,20 @@ export default function Discovery() {
       }
       const { currentDiscoveryVenues, currentDiscoveryStation } =
         await getDiscoveryVenues();
-      updateDiscoveryVenueState([...currentDiscoveryVenues[0]]);
-      updateDiscoveryStationState(currentDiscoveryStation);
-      console.log("currentDiscoveryVenues: ", currentDiscoveryVenues);
-      console.log("currentDiscoveryStation: ", currentDiscoveryStation);
+      // console.log("useeffect currendDiscoveryVenues: ", currentDiscoveryVenues);
+      // console.log(
+      //   "useeffect currendtDiscoveryStation: ",
+      //   currentDiscoveryStation,
+      // );
+
+      updateDiscoveryVenues([...currentDiscoveryVenues]); // This will be accessible as an array of venues ranked by popularity.
+      updateDiscoveryStationState(currentDiscoveryStation); // This will be directly accessible as a single station Object.
+
+      // console.log("currentDiscoveryVenues: ", currentDiscoveryVenues);
+      // console.log("\ncurrentDiscoveryStation: ", currentDiscoveryStation);
+      // console.log(currentDiscoveryVenues[0].location);
+      // console.log(discoveryStationState);
+      // console.log(discoveryVenueState[0].displayName);
     })();
   }, []);
 
@@ -66,7 +77,7 @@ export default function Discovery() {
   dayDictionary.set("6", 2);
 
   const nearestStation = "Waterloo";
-  const venueName = "BrewDog";
+
   const venueDescription =
     "Sprawling brewhouse with 60 taps of draught beer, duckpin bowling, an ice cream truck & a slide.";
 
@@ -77,7 +88,7 @@ export default function Discovery() {
 
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
-    // console.log(location);
+    console.log(discoveryStationState);
     let successCheck = await validateCheckIn({
       lat: location.coords.latitude,
       lon: location.coords.longitude,
@@ -98,6 +109,7 @@ export default function Discovery() {
     let result = await WebBrowser.openBrowserAsync("https://youtube.com");
     setResult(result);
   }
+  const venueName = "venueName";
 
   return (
     <View style={styles.container}>
@@ -112,36 +124,42 @@ export default function Discovery() {
         </Text>
       </View>
       {/* Maps */}
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: 51.51570902111879,
-          longitude: -0.13319449527961477,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      >
-        {/* <Marker
-          coordinate={{
-            latitude: 51.51570902111879,
-            longitude: -0.13319449527961477,
+
+      {discoveryVenueState.length > 0 ? (
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: discoveryVenueState[0].location.latitude,
+            longitude: discoveryVenueState[0].location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
           }}
-          onPress={_handleExternalMap}
-        /> */}
-        {/* {this.state.markers.map((marker, index) => (
+        >
           <Marker
-            key={index}
-            coordinate={marker.latlng}
-            title={marker.title}
-            description={marker.description}
+            coordinate={{
+              latitude: discoveryVenueState[0].location.latitude,
+              longitude: discoveryVenueState[0].location.longitude,
+            }}
+            onPress={_handleExternalMap}
           />
-        ))} */}
-      </MapView>
+        </MapView>
+      ) : (
+        <Text></Text>
+      )}
+
       {/* Restaurant Description */}
       <View style={styles.restaurantDescriptionContainer}>
-        <Text style={styles.text}>{nearestStation}</Text>
-        <Text style={styles.text}>{venueName}</Text>
-        <Text style={styles.text}>{venueDescription}</Text>
+        <Text style={styles.text}>{discoveryStationState.name}</Text>
+        <Text style={styles.text}>
+          {discoveryVenueState.length > 0
+            ? discoveryVenueState[0].displayName.text
+            : ""}
+        </Text>
+        <Text style={styles.text}>
+          {discoveryVenueState.length > 0
+            ? discoveryVenueState[0].editorialSummary.text
+            : ""}
+        </Text>
       </View>
       {/* Restaurant Images */}
       <View style={styles.imageContainer}>
@@ -192,3 +210,31 @@ const styles = StyleSheet.create({
     backgroundColor: "pink",
   },
 });
+
+// {discoveryVenueState.length > 0 ?
+//       <MapView
+//       style={styles.map}
+//         initialRegion={{
+//           latitude: discoveryStationState.lat,
+//           longitude: discoveryStationState.lon,
+//           latitudeDelta: 0.0922,
+//           longitudeDelta: 0.0421,
+//         }}>
+
+//           <Marker
+//             coordinate={{
+//               latitude: discoveryVenueState[0].location.latitude,
+//               longitude: discoveryVenueState[0].location.longitude,
+//             }}
+//             onPress={_handleExternalMap}
+//           />
+//       <MapView/>
+//           :
+//       <MapView
+//         style={styles.map}
+//         initialRegion={{
+//           latitude: 51.51570902111879,
+//           longitude: -0.13319449527961477,
+//           latitudeDelta: 0.0922,
+//           longitudeDelta: 0.0421,
+//         }}/>
