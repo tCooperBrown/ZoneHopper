@@ -2,7 +2,6 @@ import { Link } from "expo-router";
 import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { create } from "zustand";
-import { getDiscoveryVenues } from "../getDiscoveryVenues";
 import { useLineStore } from "../components/upper-bar";
 import { useStationsStore } from "../components/primary-stations";
 

@@ -180,8 +180,8 @@ async function findNearbyVenues(requestObj) {
         Venue.create({
           assignedStation: stationName,
           challenge: false,
-          longitude: stationLon,
-          latitude: stationLat,
+          longitude: placeObj.location.longitude,
+          latitude: placeObj.location.latitude,
           displayName: placeObj.displayName.text,
           rating: placeObj.rating,
           googleMapsUri: placeObj.googleMapsUri,
