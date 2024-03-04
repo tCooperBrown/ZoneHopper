@@ -42,63 +42,83 @@ export default function PrimaryStations() {
 
   return (
     <>
-      <ScrollView style={styles.scrollContainer}>
-        <View
-          style={[
-            styles.vertLineContainer,
-            { backgroundColor: tubeLineColours[activeLine] },
-            { height: stations.length * 75 },
-          ]}
-        ></View>
+      <View style={styles.masterContainer}>
+        <ScrollView style={styles.scrollContainer}>
+          <View
+            style={[
+              styles.vertLineContainer,
+              { backgroundColor: tubeLineColours[activeLine] },
+              { height: stations.length * 90 },
+            ]}
+          ></View>
 
-        {stations.map((station, index) => (
-          <View style={styles.stationContainer} key={uuid4()}>
-            <View style={styles.stationCircle}></View>
-            <View style={styles.stationName}>
-              <Text style={styles.text}>{station.name}</Text>
+          {stations.map((station, index) => (
+            <View style={styles.stationContainer} key={uuid4()}>
+              <View style={styles.stationCircle}></View>
+              <View style={styles.stationName}>
+                <Text style={[styles.text, { fontWeight: "500" }]}>
+                  {station.name}
+                </Text>
+              </View>
             </View>
-          </View>
-        ))}
-      </ScrollView>
+          ))}
+        </ScrollView>
+      </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  masterContainer: {
+    flex: 1,
+    paddingTop: 15,
+    paddingLeft: 20,
+    paddingRight: 20,
+    // paddingBottom: 20,
+    // height: "100%",
+  },
+
   stationName: {
-    backgroundColor: "red",
+    backgroundColor: "#ee933c",
     borderRadius: 5,
     justifyContent: "center",
+    alignItems: "center",
     paddingLeft: 10,
     paddingRight: 10,
+    width: 300,
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingLeft: 15,
+    paddingRight: 15,
   },
   stationContainer: {
     flexDirection: "row",
-    gap: 10,
-    marginBottom: 15,
+    gap: 20,
+    // marginTop: 30,
+    marginBottom: 20,
     minWidth: "75%",
-    minHeight: 60,
+    // minHeight: 60,
   },
   stationCircle: {
     backgroundColor: "white",
     height: 30,
     width: 30,
     borderRadius: 15,
+    alignSelf: "center",
   },
   scrollContainer: {
-    paddingTop: 15,
-    paddingLeft: 20,
-    paddingRight: 20,
+    // height: "150%",
   },
   vertLineContainer: {
     flex: 1,
-    width: 18,
+    width: 13,
     borderRadius: 10,
     position: "absolute",
-    marginLeft: 5,
+    marginLeft: 7.8,
+    // marginBottom: 30,
   },
   text: {
-    color: "#FFF",
+    color: "white",
     fontSize: 24,
   },
 });
