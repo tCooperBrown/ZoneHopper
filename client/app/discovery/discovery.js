@@ -21,10 +21,18 @@ export const useDiscoveryStationStore = create((set) => ({
     set({ discoveryStation: newDiscoveryStation }),
 }));
 
+// 98244888, 53088789122;
+
 export default function Discovery() {
   const [result, setResult] = useState(null);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [region, setRegion] = useState({
+    latitude: 51.514316,
+    longitude: -0.126933,
+    latitudeDelta: 0.5,
+    longitudeDelta: 0.5,
+  });
   const updateDiscoveryVenues = useDiscoveryVenueStore(
     (state) => state.updateDiscoveryVenues,
   );
@@ -55,14 +63,39 @@ export default function Discovery() {
       //   currentDiscoveryStation,
       // );
 
-      updateDiscoveryVenues([...currentDiscoveryVenues]); // This will be accessible as an array of venues ranked by popularity.
-      updateDiscoveryStationState(currentDiscoveryStation); // This will be directly accessible as a single station Object.
+      // This will be accessible as an array of venues ranked by popularity.
+      // This will be directly accessible as a single station Object.
+
+      // async function updateDiscoveryandRegion() {
+      //   await updateDiscoveryVenues([...currentDiscoveryVenues]);
+      //   await updateDiscoveryStationState(currentDiscoveryStation);
+      //   setRegion({
+      //     latitude: currentDiscoveryVenues[0].latitude,
+      //     longitude: currentDiscoveryVenues[0].longitude,
+      //     latitudeDelta: 0.01,
+      //     longitudeDelta: 0.01,
+      //   });
+      // }
+      // updateDiscoveryandRegion();
+
+      updateDiscoveryVenues([...currentDiscoveryVenues]);
+      updateDiscoveryStationState(currentDiscoveryStation);
+      setRegion({
+        latitude: currentDiscoveryVenues[0].latitude,
+        longitude: currentDiscoveryVenues[0].longitude,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
 
       // console.log("currentDiscoveryVenues: ", currentDiscoveryVenues);
       // console.log("\ncurrentDiscoveryStation: ", currentDiscoveryStation);
       // console.log(currentDiscoveryVenues[0].location);
       // console.log(discoveryStationState);
       // console.log(discoveryVenueState[0].displayName);
+
+      // console.log("discoveryVenueState: ", await discoveryVenueState);
+
+      // console.log("\nregion", region);
     })();
   }, []);
 
@@ -79,8 +112,6 @@ export default function Discovery() {
   const imageURL = "https://picsum.photos/seed/696/3000/2000";
 
   async function onPress() {
-    // alert("Checking you in...");
-
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
     console.log(discoveryStationState);
@@ -120,15 +151,7 @@ export default function Discovery() {
       {/* Maps */}
 
       {discoveryVenueState.length > 0 ? (
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: discoveryVenueState[0].latitude,
-            longitude: discoveryVenueState[0].longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          }}
-        >
+        <MapView style={styles.map} region={region}>
           <Marker
             coordinate={{
               latitude: discoveryVenueState[0].latitude,
