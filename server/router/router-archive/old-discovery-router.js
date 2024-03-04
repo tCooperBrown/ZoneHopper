@@ -12,19 +12,14 @@ const discoveryRouter = Router();
 // This is now working. Now need to sort out the frontend to tell the backend of any activeLine changes, etc.
 discoveryRouter.get("/", async (req, res) => {
   try {
-    let user = await User.find({ activeLine: req.query.activeLine });
+    let user = await User.find({});
+    user = user[0];
+    console.log(user.lastDiscoveryUpdate);
+    const needsUpdate = challengeAgeCheck(user.lastDiscoveryUpdate);
 
-    const timeStamp = Date.now();
-
-    if (user.length === 0) {
-      // SCENARIO 1A (SEE OBSIDIAN)
-
-      const randomStation = await selectRandomStation(req.query.activeLine);
-      // res.send(user);
-      console.log(randomStation);
-      console.log(randomStation.name);
-      console.log(randomStation.lat);
-      console.log(randomStation.lon);
+    if (needsUpdate) {
+      const randomStation = await selectRandomStation(user.activeLine);
+      // console.log("randomStation", randomStation);
 
       const nearbyVenues = await findNearbyVenues({
         stationName: randomStation.name,
@@ -32,100 +27,27 @@ discoveryRouter.get("/", async (req, res) => {
         stationLon: randomStation.lon,
       });
 
-      user = await User.create({
-        lastDiscoveryUpdate: timeStamp,
-        currentDiscoveryStation: randomStation,
-        currentDiscoveryVenues: nearbyVenues,
-        visitedStations: [],
-        activeLine: req.query.activeLine,
-      });
+      user.currentDiscoveryStation = randomStation;
+      user.lastDiscoveryUpdate = Date.now();
+      user.currentDiscoveryVenues = nearbyVenues;
+      await user.save();
 
       res.json({
-        lastDiscoveryUpdate: timeStamp,
         currentDiscoveryStation: randomStation,
         currentDiscoveryVenues: nearbyVenues,
-        visitedStations: [],
-        activeLine: req.query.activeLine,
+        message: "new venues attached",
       });
-    } else if (user.length > 0) {
-      user = user[0];
-
-      const needsUpdate = challengeAgeCheck(user.lastDiscoveryUpdate);
-
-      if (needsUpdate) {
-        const randomStation = await selectRandomStation(user.activeLine);
-        // console.log("randomStation", randomStation);
-
-        const nearbyVenues = await findNearbyVenues({
-          stationName: randomStation.name,
-          stationLat: randomStation.lat,
-          stationLon: randomStation.lon,
-        });
-
-        user.currentDiscoveryStation = randomStation;
-        user.lastDiscoveryUpdate = timeStamp;
-        user.currentDiscoveryVenues = nearbyVenues;
-        await user.save();
-
-        res.json({
-          lastDiscoveryUpdate: timeStamp,
-          currentDiscoveryStation: randomStation,
-          currentDiscoveryVenues: nearbyVenues,
-          message: "new venues attached",
-        });
-      } else {
-        res.json({
-          lastDiscoveryUpdate: timeStamp,
-          currentDiscoveryStation: user.currentDiscoveryStation,
-          currentDiscoveryVenues: user.currentDiscoveryVenues,
-          message: "Suggestion remains the same this week",
-        });
-      }
+    } else {
+      res.json({
+        currentDiscoveryStation: user.currentDiscoveryStation,
+        currentDiscoveryVenues: user.currentDiscoveryVenues,
+        message: "Suggestion remains the same this week",
+      });
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
-
-/////////////////
-//   try {
-//     let user = await User.find({});
-//     user = user[0];
-//     console.log(user.lastDiscoveryUpdate);
-//     const needsUpdate = challengeAgeCheck(user.lastDiscoveryUpdate);
-
-//     if (needsUpdate) {
-//       const randomStation = await selectRandomStation(user.activeLine);
-//       // console.log("randomStation", randomStation);
-
-//       const nearbyVenues = await findNearbyVenues({
-//         stationName: randomStation.name,
-//         stationLat: randomStation.lat,
-//         stationLon: randomStation.lon,
-//       });
-
-//       user.currentDiscoveryStation = randomStation;
-//       user.lastDiscoveryUpdate = Date.now();
-//       user.currentDiscoveryVenues = nearbyVenues;
-//       await user.save();
-
-//       res.json({
-//         currentDiscoveryStation: randomStation,
-//         currentDiscoveryVenues: nearbyVenues,
-//         message: "new venues attached",
-//       });
-//     } else {
-//       res.json({
-//         currentDiscoveryStation: user.currentDiscoveryStation,
-//         currentDiscoveryVenues: user.currentDiscoveryVenues,
-//         message: "Suggestion remains the same this week",
-//       });
-//     }
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// });
 
 // I know I am duplicating the code here from the controller.
 // I want to have ability to call the logic from both the endpoint request and internally.
@@ -174,9 +96,7 @@ async function findNearbyVenues(requestObj) {
       // console.log(parsedResponse);
 
       // NOTE: Do not worry if you get a console error due to missing fields. Error is caught and next place will be processed for caching.
-      // for (let placeObj of parsedResponse)
-
-      await parsedResponse.forEach((placeObj, index) => {
+      parsedResponse.forEach((placeObj, index) => {
         Venue.create({
           assignedStation: stationName,
           challenge: false,
@@ -193,7 +113,7 @@ async function findNearbyVenues(requestObj) {
         }).catch((err) => console.error(err));
       });
 
-      let newVenues = await Venue.find({
+      let newVenues = Venue.find({
         assignedStation: stationName,
       });
       return newVenues;
@@ -219,7 +139,5 @@ async function selectRandomStation(activeLine) {
   // return random station from current user-preferred line
   return stationsArray[randomIndex];
 }
-
-// selectRandomStation("victoria").then((res) => console.log(res));
 
 module.exports = discoveryRouter;

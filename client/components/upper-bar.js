@@ -36,13 +36,6 @@ export default function UpperBar() {
   const circleSize = 40;
   const circleRadius = circleSize / 2;
 
-  useEffect(() => {
-    async function onRender() {
-      await informPreferredLine(line);
-    }
-    onRender();
-  }, []);
-
   return (
     <>
       <View style={styles.outerContainer}>

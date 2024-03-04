@@ -19,11 +19,6 @@ export default function Home() {
   const activeLine = useLineStore((state) => state.line);
   const stations = useStationsStore((state) => state.stations);
 
-  useEffect(() => {
-    // console.log(activeLine);
-    // getDiscoveryVenues(stations);
-  }, []);
-
   return (
     <View style={styles.container}>
       <Link replace href="/primary/primary">

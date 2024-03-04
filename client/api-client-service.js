@@ -57,10 +57,12 @@ export async function validateCheckIn(coordData) {
 }
 
 // I'm going to get the stationLon, stationLat from the backend rather than doing it here.
-export async function getDiscoveryVenues() {
+export async function getDiscoveryVenues(activeLine) {
   // This first API call just triggers a refresh of the discovery venues if needed.
-  let res = await fetch(`${BASE_URL}/discover`);
+  let res = await fetch(`${BASE_URL}/discover?activeLine=${activeLine}`);
+
   res = await res.json();
+  console.log(res);
   // console.log(res.currentDiscoveryStation.lat);
   // console.log(res.currentDiscoveryStation.lon);
   // console.log("API SERVICE", res);
@@ -83,7 +85,6 @@ export async function getDiscoveryVenues() {
   //   `${BASE_URL}/venue-pool?stationLon=${stationLon}&stationLat=${stationLat}&stationName=${stationName}`,
   // );
 }
-getDiscoveryVenues();
 
 // getDiscoveryVenues();
 ////////////DUMP - DISREGARD //////////////////////////////

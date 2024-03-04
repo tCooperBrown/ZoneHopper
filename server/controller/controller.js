@@ -86,51 +86,110 @@ async function getOrderedStationsByLine(line) {
   return res.orderedStationObjects;
 }
 
+// NOTE TO REVIEWER: I am deliberately omitting stations that fall outside of the first "branch" given by the API. I decided to outscope visually representing those kinds of lines. Lines in the app that do not have a single simple branch will not be complete / ordered correctly.
+
+// Scrape every TFL station with inbound sequence linked.
 async function cacheStationsIfNotRecentlyAvailable() {
   // Will need to return to this function to incorporate purge & refresh every 30 days
 
-  if ((await Station.countDocuments({})) === 0) {
-    const bakerlooStations = await getOrderedStationsByLine("bakerloo");
-    bakerlooStations.forEach((stationObj, index) => {
-      Station.create({
-        line: "bakerloo",
-        lon: stationObj.lon,
-        lat: stationObj.lat,
-        name: stationObj.name,
-        inboundOrder: index,
-      });
-    });
-    console.log("Done creating docs for Bakerloo");
+  const linesArr = [
+    "bakerloo",
+    "central",
+    "circle",
+    "district",
+    "hammersmith-city",
+    "jubilee",
+    "metropolitan",
+    "northern",
+    "piccadilly",
+    "victoria",
+    "waterloo-city",
+  ];
 
-    const victoriaStations = await getOrderedStationsByLine("victoria");
-    victoriaStations.forEach((stationObj, index) => {
-      Station.create({
-        line: "victoria",
-        lon: stationObj.lon,
-        lat: stationObj.lat,
-        name: stationObj.name,
-        inboundOrder: index,
-      });
-    });
-    console.log("Done creating docs for Victoria");
+  for (const line of linesArr) {
+    if ((await Station.countDocuments({ line: line })) === 0) {
+      getOrderedStationsByLine(line).then(
+        (stationsArray) =>
+          stationsArray.forEach((stationObj, index) => {
+            Station.create({
+              line: line,
+              lon: stationObj.lon,
+              lat: stationObj.lat,
+              name: stationObj.name,
+              inboundOrder: index,
+            });
+          }),
+        console.log(`Done creating docs for ${line}`),
+      );
+    }
   }
-  // RETURN TO THIS: LOGIC FOR PURGE & REFRESH AFTER 30 DAYS. HOWEVER, WILL LIKELY JUST DO A DAY-OF-MONTH OR SIMILAR.
-  // else {
-  //   console.log(
-  //     await Station.findOne(
-  //       {},
-  //       {},
-  //       { sort: { created_at: 1 } },
-  //       function (err, post) {
-  //         // console.log(post);
-  //         // RETURN TO THIS: LOGIC FOR PURGE & REFRESH AFTER 30 DAYS. HOWEVER, WILL LIKELY JUST DO A DAY-OF-MONTH OR SIMILAR.
-  //       },
-  //     ),
-  //   );
-  // }
 }
 
 cacheStationsIfNotRecentlyAvailable();
+
+// linesArr.forEach((line, index)=> {
+//   countHelper(line)
+// })
+
+//     Station.countDocuments({ line: line });
+//     if (Station.countDocuments({ line: line }) === 0) {
+//       getOrderedStationsByLine(line).then((stationsArray) =>
+//         stationsArray.forEach((stationObj) => {
+//           Station.create({
+//             line: line,
+//             lon: stationObj.lon,
+//             lat: stationObj.lat,
+//             name: stationObj.name,
+//             inboundOrder: index,
+//           });
+//         }),
+//       );
+//       console.log(`Done creating docs for ${line}!`);
+//     }
+//   });
+// }
+
+// if ((await Station.countDocuments({line: })) === 0) {
+//   const bakerlooStations = await getOrderedStationsByLine("bakerloo");
+//   bakerlooStations.forEach((stationObj, index) => {
+//     Station.create({
+//       line: "bakerloo",
+//       lon: stationObj.lon,
+//       lat: stationObj.lat,
+//       name: stationObj.name,
+//       inboundOrder: index,
+//     });
+//   });
+//   console.log("Done creating docs for Bakerloo");
+
+//   const victoriaStations = await getOrderedStationsByLine("victoria");
+//   victoriaStations.forEach((stationObj, index) => {
+//     Station.create({
+//       line: "victoria",
+//       lon: stationObj.lon,
+//       lat: stationObj.lat,
+//       name: stationObj.name,
+//       inboundOrder: index,
+//     });
+//   });
+//   console.log("Done creating docs for Victoria");
+
+// RETURN TO THIS: LOGIC FOR PURGE & REFRESH AFTER 30 DAYS. HOWEVER, WILL LIKELY JUST DO A DAY-OF-MONTH OR SIMILAR.
+// else {
+//   console.log(
+//     await Station.findOne(
+//       {},
+//       {},
+//       { sort: { created_at: 1 } },
+//       function (err, post) {
+//         // console.log(post);
+//         // RETURN TO THIS: LOGIC FOR PURGE & REFRESH AFTER 30 DAYS. HOWEVER, WILL LIKELY JUST DO A DAY-OF-MONTH OR SIMILAR.
+//       },
+//     ),
+//   );
+// }
+
+// cacheStationsIfNotRecentlyAvailable();
 
 async function retrieveCachedStations(req, res) {
   try {

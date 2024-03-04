@@ -9,6 +9,7 @@ import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import * as WebBrowser from "expo-web-browser";
 import { create } from "zustand";
+import { useLineStore } from "../../components/upper-bar";
 
 export const useDiscoveryVenueStore = create((set) => ({
   discoveryVenues: [],
@@ -21,9 +22,9 @@ export const useDiscoveryStationStore = create((set) => ({
     set({ discoveryStation: newDiscoveryStation }),
 }));
 
-// 98244888, 53088789122;
-
 export default function Discovery() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState(null);
   const [result, setResult] = useState(null);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -45,58 +46,79 @@ export default function Discovery() {
   const discoveryStationState = useDiscoveryStationStore(
     (state) => state.discoveryStation,
   );
+  const activeLine = useLineStore((state) => state.line);
 
   // console.log("discovery venue state", discoveryVenueState);
 
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        return;
+    const fetchDiscoveryData = async () => {
+      setIsLoading(true);
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          setLoadError("Permission to access location was denied");
+          return;
+        }
+
+        const { currentDiscoveryVenues, currentDiscoveryStation } =
+          await getDiscoveryVenues(activeLine);
+
+        updateDiscoveryVenues([...currentDiscoveryVenues]);
+        updateDiscoveryStationState(currentDiscoveryStation);
+
+        setRegion({
+          latitude: currentDiscoveryVenues[0].latitude,
+          longitude: currentDiscoveryVenues[0].longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        });
+      } catch (error) {
+        setLoadError("Failed to fetch discovery challenge. Please try again.");
+        console.error("error line 77", error);
+      } finally {
+        setIsLoading(false);
       }
-      const { currentDiscoveryVenues, currentDiscoveryStation } =
-        await getDiscoveryVenues();
-      // console.log("useeffect currentDiscoveryVenues: ", currentDiscoveryVenues);
-      // console.log(
-      //   "useeffect currendtDiscoveryStation: ",
-      //   currentDiscoveryStation,
-      // );
+    };
 
-      // This will be accessible as an array of venues ranked by popularity.
-      // This will be directly accessible as a single station Object.
+    fetchDiscoveryData();
 
-      // async function updateDiscoveryandRegion() {
-      //   await updateDiscoveryVenues([...currentDiscoveryVenues]);
-      //   await updateDiscoveryStationState(currentDiscoveryStation);
-      //   setRegion({
-      //     latitude: currentDiscoveryVenues[0].latitude,
-      //     longitude: currentDiscoveryVenues[0].longitude,
-      //     latitudeDelta: 0.01,
-      //     longitudeDelta: 0.01,
-      //   });
-      // }
-      // updateDiscoveryandRegion();
+    // (async () => {
+    //   let { status } = await Location.requestForegroundPermissionsAsync();
+    //   if (status !== "granted") {
+    //     setErrorMsg("Permission to access location was denied");
+    //     return;
+    //   }
+    //   // console.log("activeLine", activeLine);
+    //   const { currentDiscoveryVenues, currentDiscoveryStation } =
+    //     await getDiscoveryVenues(activeLine);
 
-      updateDiscoveryVenues([...currentDiscoveryVenues]);
-      updateDiscoveryStationState(currentDiscoveryStation);
-      setRegion({
-        latitude: currentDiscoveryVenues[0].latitude,
-        longitude: currentDiscoveryVenues[0].longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
-      });
+    //   // console.log("useeffect currentDiscoveryVenues: ", currentDiscoveryVenues);
+    //   // console.log(
+    //   //   "useeffect currendtDiscoveryStation: ",
+    //   //   currentDiscoveryStation,
+    //   // );
 
-      // console.log("currentDiscoveryVenues: ", currentDiscoveryVenues);
-      // console.log("\ncurrentDiscoveryStation: ", currentDiscoveryStation);
-      // console.log(currentDiscoveryVenues[0].location);
-      // console.log(discoveryStationState);
-      // console.log(discoveryVenueState[0].displayName);
+    //   // This will be accessible as an array of venues ranked by popularity.
+    //   updateDiscoveryVenues([...(await currentDiscoveryVenues)]);
+    //   // This will be directly accessible as a single station Object.
+    //   updateDiscoveryStationState(await currentDiscoveryStation);
+    //   setRegion({
+    //     latitude: await currentDiscoveryVenues[0].latitude,
+    //     longitude: await currentDiscoveryVenues[0].longitude,
+    //     latitudeDelta: 0.01,
+    //     longitudeDelta: 0.01,
+    //   });
 
-      // console.log("discoveryVenueState: ", await discoveryVenueState);
+    //   // console.log("currentDiscoveryVenues: ", currentDiscoveryVenues);
+    //   // console.log("\ncurrentDiscoveryStation: ", currentDiscoveryStation);
+    //   // console.log(currentDiscoveryVenues[0].location);
+    //   // console.log(discoveryStationState);
+    //   // console.log(discoveryVenueState[0].displayName);
 
-      // console.log("\nregion", region);
-    })();
+    //   // console.log("discoveryVenueState: ", await discoveryVenueState);
+
+    //   // console.log("\nregion", region);
+    // })();
   }, []);
 
   // I'm going to update this. The backend now starts the clock at any given day/time. Counting days of the week here needs to go.
@@ -114,7 +136,7 @@ export default function Discovery() {
   async function onPress() {
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
-    console.log(discoveryStationState);
+    console.log("discoveryStationState line 139", discoveryStationState);
     let successCheck = await validateCheckIn({
       lat: location.coords.latitude,
       lon: location.coords.longitude,
@@ -123,8 +145,8 @@ export default function Discovery() {
     });
 
     // let outcome = await successCheck.json();
-    console.log("discoveryStationState: ", discoveryStationState);
-    console.log("discoveryVenueState: ", discoveryVenueState);
+    console.log("discoveryStationState line 148: ", discoveryStationState);
+    console.log("discoveryVenueState line 149: ", discoveryVenueState);
 
     (await successCheck)
       ? alert("We've checked you in!")
@@ -137,69 +159,77 @@ export default function Discovery() {
     );
     setResult(result);
   }
-
   return (
-    <View style={styles.container}>
-      {/* upperbar container */}
-      <View style={styles.upperBarContainer}>
-        {/* Back Button */}
-        <View style={styles.backButton}>
-          <Link replace href="/primary/primary">
-            <Text style={styles.text}>Back</Text>
-          </Link>
-        </View>
+    <>
+      {!isLoading && !loadError && (
+        <>
+          <View style={styles.container}>
+            {/* upperbar container */}
+            <View style={styles.upperBarContainer}>
+              {/* Back Button */}
+              <View style={styles.backButton}>
+                <Link replace href="/primary/primary">
+                  <Text style={styles.text}>Back</Text>
+                </Link>
+              </View>
 
-        <View style={styles.daysLeft}>
-          <Text style={styles.text}>
-            Days Left: {dayDictionary.get(new Date().getDay().toString())}
-          </Text>
-        </View>
-      </View>
-      {/* Maps */}
+              <View style={styles.daysLeft}>
+                <Text style={styles.text}>
+                  Days Left: {dayDictionary.get(new Date().getDay().toString())}
+                </Text>
+              </View>
+            </View>
+            {/* Maps */}
 
-      {discoveryVenueState.length > 0 ? (
-        <MapView style={styles.map} region={region}>
-          <Marker
-            coordinate={{
-              latitude: discoveryVenueState[0].latitude,
-              longitude: discoveryVenueState[0].longitude,
-            }}
-            onPress={_handleExternalMap}
-          />
-        </MapView>
-      ) : (
-        <Text></Text>
-      )}
+            {discoveryVenueState.length > 0 ? (
+              <MapView style={styles.map} region={region}>
+                <Marker
+                  coordinate={{
+                    latitude: discoveryVenueState[0]?.latitude || 0,
+                    longitude: discoveryVenueState[0]?.longitude || 0,
+                  }}
+                  onPress={_handleExternalMap}
+                />
+              </MapView>
+            ) : (
+              <Text></Text>
+            )}
 
-      {/* Venue Description */}
-      <View style={styles.restaurantDescriptionContainer}>
-        <Text style={styles.text}>{discoveryStationState.name}</Text>
-        <Text style={styles.text}>
-          {discoveryVenueState.length > 0
-            ? discoveryVenueState[0].displayName
-            : ""}
-        </Text>
-        <Text style={styles.text}>
-          {discoveryVenueState.length > 0
-            ? discoveryVenueState[0].editorialSummary
-            : ""}
-        </Text>
-      </View>
-      {/* Restaurant Images */}
-      <View style={styles.imageContainer}>
-        <Image style={styles.image} source={imageURL} />
-      </View>
-      {/* Check In Button! */}
+            {/* Venue Description */}
 
-      <View style={styles.bottomBar}>
-        <Pressable style={styles.button} onPress={onPress}>
-          <View style={styles.checkInButton}>
-            <Text style={styles.text}>Check In!</Text>
+            <View style={styles.restaurantDescriptionContainer}>
+              <Text style={styles.text}>
+                {discoveryStationState?.name || ""}
+              </Text>
+              <Text style={styles.text}>
+                {discoveryVenueState.length > 0
+                  ? discoveryVenueState[0]?.displayName || ""
+                  : ""}
+              </Text>
+              <Text style={styles.text}>
+                {discoveryVenueState.length > 0
+                  ? discoveryVenueState[0]?.editorialSummary || ""
+                  : ""}
+              </Text>
+            </View>
+            {/* Restaurant Images */}
+            <View style={styles.imageContainer}>
+              <Image style={styles.image} source={imageURL} />
+            </View>
+            {/* Check In Button! */}
+
+            <View style={styles.bottomBar}>
+              <Pressable style={styles.button} onPress={onPress}>
+                <View style={styles.checkInButton}>
+                  <Text style={styles.text}>Check In!</Text>
+                </View>
+              </Pressable>
+            </View>
+            {/* end of master container View */}
           </View>
-        </Pressable>
-      </View>
-      {/* end of master container View */}
-    </View>
+        </>
+      )}
+    </>
   );
 }
 

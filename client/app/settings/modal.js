@@ -5,6 +5,7 @@ import { create } from "zustand";
 import { useLineStore } from "../../components/upper-bar";
 import { getAllTubeLines, informPreferredLine } from "../../api-client-service";
 import { useEffect } from "react";
+import { forceDiscoverPrefetch } from "../discovery/discovery";
 
 const useAllLinesStore = create((set) => ({
   allLines: ["test1", "test2", "test3"],
@@ -32,8 +33,8 @@ export default function Modal() {
 
   function onPress(selectedLine) {
     updateActiveLine(selectedLine);
-    informPreferredLine(selectedLine);
-    console.log("selectedLine", selectedLine);
+    // informPreferredLine(selectedLine);  // NOTE IMPORTANT: This is being disabled. Review Obsidian for reasoning. Working on implementing multi-line challenges.
+    // console.log("selectedLine", selectedLine);
   }
 
   // If the page was reloaded or navigated to directly, then the modal should be presented as
