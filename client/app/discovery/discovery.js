@@ -18,6 +18,7 @@ import {
   useSuccessfulVisitStore,
 } from "../../components/zustand-stores";
 import { generatePhotoUri } from "../../api-client-service";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function Discovery() {
   const [isLoading, setIsLoading] = useState(true);
@@ -112,13 +113,10 @@ export default function Discovery() {
   dayDictionary.set("5", 3);
   dayDictionary.set("6", 2);
 
-  // const photoUri = "https://picsum.photos/seed/696/3000/2000";
-
   async function onPress() {
     // console.log("discoveryVenueState line 149: ", discoveryVenueState);
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
-    // console.log("discoveryStationState line 139", discoveryStationState);
     let successCheck = await validateCheckIn({
       lat: location.coords.latitude,
       lon: location.coords.longitude,
@@ -151,7 +149,7 @@ export default function Discovery() {
   return (
     <>
       {!isLoading && !loadError && (
-        <>
+        <View style={{ flex: 1, backgroundColor: "#000439" }}>
           <View style={styles.container}>
             {/* upperbar container */}
             <View style={styles.upperBarContainer}>
@@ -159,13 +157,15 @@ export default function Discovery() {
               <View style={styles.backButton}>
                 <Link replace href="/primary/primary" asChild>
                   <Pressable>
-                    <Text style={styles.text}>Back</Text>
+                    <Text style={[styles.text, { fontWeight: "600" }]}>
+                      Back
+                    </Text>
                   </Pressable>
                 </Link>
               </View>
 
               <View style={styles.daysLeft}>
-                <Text style={styles.text}>
+                <Text style={[styles.text, { fontWeight: "400" }]}>
                   Days Left: {dayDictionary.get(new Date().getDay().toString())}
                 </Text>
               </View>
@@ -183,21 +183,26 @@ export default function Discovery() {
                 />
               </MapView>
             ) : (
-              <Text></Text>
+              <></>
             )}
 
             {/* Venue Description */}
 
             <View style={styles.restaurantDescriptionContainer}>
-              <Text style={styles.text}>
+              <Text style={[styles.text, { fontWeight: "700" }]}>
                 {discoveryStationState?.name || ""}
               </Text>
-              <Text style={styles.text}>
+              <Text
+                style={[
+                  styles.text,
+                  { fontStyle: "italic", fontWeight: "600" },
+                ]}
+              >
                 {discoveryVenueState.length > 0
                   ? discoveryVenueState[0]?.displayName || ""
                   : ""}
               </Text>
-              <Text style={styles.text}>
+              <Text style={[styles.text, { fontWeight: "500" }]}>
                 {discoveryVenueState.length > 0
                   ? discoveryVenueState[0]?.editorialSummary || ""
                   : ""}
@@ -209,16 +214,38 @@ export default function Discovery() {
             </View>
             {/* Check In Button! */}
 
-            <View style={styles.bottomBar}>
+            {/* <View style={styles.bottomBar}>
               <Pressable style={styles.button} onPress={onPress}>
                 <View style={styles.checkInButton}>
-                  <Text style={styles.text}>Check In!</Text>
+                  <Text style={[styles.text, { fontWeight: "700" }]}>
+                    Check In!
+                  </Text>
                 </View>
               </Pressable>
+            </View> */}
+
+            <View style={styles.bottomBar}>
+              <Pressable style={styles.button} onPress={onPress}>
+                <LinearGradient
+                  colors={[
+                    "#7c7ccc",
+                    "#6563c6",
+                    "#4d4abe",
+                    "#3230b5",
+                    "#040fab",
+                  ]}
+                  style={styles.checkInButton}
+                >
+                  <Text style={[styles.text, { fontWeight: "700" }]}>
+                    Check In!
+                  </Text>
+                </LinearGradient>
+              </Pressable>
             </View>
+
             {/* end of master container View */}
           </View>
-        </>
+        </View>
       )}
     </>
   );
@@ -227,27 +254,29 @@ export default function Discovery() {
 const styles = StyleSheet.create({
   bottomBar: {
     flexDirection: "row",
-    backgroundColor: "#040FAB",
-    paddingLeft: 40,
-    // justifyContent: "center",
+    // backgroundColor: "#040FAB",
+    justifyContent: "center",
   },
   checkInButton: {
-    backgroundColor: "#7C7CCC",
-    height: 70,
+    // backgroundColor: "#7C7CCC",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 5,
-    paddingLeft: 10,
-    paddingRight: 10,
+    borderRadius: 20,
+    width: 300,
+    paddingBottom: 10,
+    paddingTop: 10,
+    marginBottom: 5,
   },
 
   daysLeft: {
     justifyContent: "center",
   },
   backButton: {
-    height: 50,
-    width: 80,
-    backgroundColor: "#5758C1",
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 10,
+    paddingRight: 10,
+    backgroundColor: "#7C7CCC",
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
@@ -259,33 +288,36 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    paddingLeft: 15,
+    paddingRight: 15,
   },
   upperBarContainer: {
     flexDirection: "row",
-    backgroundColor: "#040FAB",
+    // backgroundColor: "#040FAB",
     justifyContent: "space-between",
-    paddingLeft: 30,
-    paddingRight: 30,
-    paddingTop: 10,
+    // paddingRight: 30,
+    paddingTop: 20,
     paddingBottom: 10,
   },
   map: {
     width: "100%",
     height: "40%",
+    borderRadius: 15,
   },
   restaurantDescriptionContainer: {
-    height: "23%",
-    padding: 20,
+    marginBottom: 10,
+    paddingTop: 5,
     gap: 10,
-    backgroundColor: "#040FAB",
   },
   image: {
     flex: 1,
     width: "100%",
     height: "100%",
+    borderRadius: 15,
   },
   imageContainer: {
     flex: 1,
     width: "100%",
+    paddingBottom: 5,
   },
 });

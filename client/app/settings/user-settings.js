@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
   text: {
     color: "white",
     fontSize: 40,
+    textTransform: "capitalize",
   },
   button: {
     borderRadius: 5,
