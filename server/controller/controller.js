@@ -223,51 +223,55 @@ async function retrieveCachedStations(req, res) {
 
 async function validateCoordSubmission(req, res) {
   try {
-    let venueCoords = { lon: req.body.venueLon, lat: req.body.venueLat };
+    const { venueLon, venueLat, lat, lon } = req.body;
+    console.log("venueLon", venueLon), console.log("venueLat", venueLat);
+    // console.log(req.body);
+    // console.log(venueCoords);
     if (
       geolib.isPointWithinRadius(
         {
-          longitude: req.body.lon,
-          latitude: req.body.lat,
+          longitude: lon,
+          latitude: lat,
         },
         {
-          longitude: venueCoords.lon,
-          latitude: venueCoords.lat,
+          longitude: venueLon,
+          latitude: venueLat,
         },
         100,
       )
     ) {
       try {
-        res.send({ success: true });
-        console.log("success & venueCoords: ", venueCoords);
+        console.log("success & venueCoords: ", { venueLat, venueLon });
+        res.json({ success: true });
       } catch (error) {
         console.error(error);
-        res.status(400).send({ success: false });
+        res.status(400).json({ success: false });
       }
     } else {
       try {
-        res.send({ success: false });
-        console.log("fail & venueCoords: ", venueCoords);
+        console.log("fail & venueCoords: ", { venueLat, venueLon });
+        res.json({ success: false });
       } catch (error) {
         console.error(error);
-        res.status(400).send({ success: false });
+        res.status(400).json({ success: false });
       }
     }
   } catch (error) {
     console.error(error);
-    res.status(400).send({ succes: false });
+    res.status(400).json({ succes: false });
   }
 }
 
 // Currently does not make a new venue each week. As this stays the same for a while - I will mock one and build out other functionality.
-async function generateWeeklyVenue() {
-  Venue.create({
-    lon: -0.115554,
-    lat: 51.502233,
-    name: "BrewDog",
-    challenge: true,
-  });
-}
+// UPDATE: Ignore below function. Now not needed but kept in for debugging purposes.
+// async function generateWeeklyVenue() {
+//   Venue.create({
+//     lon: -0.115554,
+//     lat: 51.502233,
+//     name: "BrewDog",
+//     challenge: true,
+//   });
+// }
 
 // generateWeeklyVenue();
 

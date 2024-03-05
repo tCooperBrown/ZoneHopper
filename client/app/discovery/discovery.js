@@ -134,19 +134,19 @@ export default function Discovery() {
   const imageURL = "https://picsum.photos/seed/696/3000/2000";
 
   async function onPress() {
+    // console.log("discoveryVenueState line 149: ", discoveryVenueState);
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
-    console.log("discoveryStationState line 139", discoveryStationState);
+    // console.log("discoveryStationState line 139", discoveryStationState);
     let successCheck = await validateCheckIn({
       lat: location.coords.latitude,
       lon: location.coords.longitude,
-      venueLat: discoveryStationState.lat,
-      venueLon: discoveryStationState.lon,
+      venueLat: discoveryVenueState[0].latitude,
+      venueLon: discoveryVenueState[0].longitude,
     });
 
     // let outcome = await successCheck.json();
-    console.log("discoveryStationState line 148: ", discoveryStationState);
-    console.log("discoveryVenueState line 149: ", discoveryVenueState);
+    // console.log("discoveryStationState line 148: ", discoveryStationState);
 
     (await successCheck)
       ? alert("We've checked you in!")

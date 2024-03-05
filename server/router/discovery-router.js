@@ -128,7 +128,7 @@ discoveryRouter.get("/", async (req, res) => {
 // });
 
 // I know I am duplicating the code here from the controller.
-// I want to have ability to call the logic from both the endpoint request and internally.
+// I'm keeping similar duplicate logic for testing purposes.
 async function findNearbyVenues(requestObj) {
   const { stationName, stationLat, stationLon } = requestObj;
   const apiKey = process.env.API_KEY;
@@ -220,6 +220,26 @@ async function selectRandomStation(activeLine) {
   return stationsArray[randomIndex];
 }
 
-// selectRandomStation("victoria").then((res) => console.log(res));
+// Abandoned code for injectingPhotoUri's. It does work for generating all PhotoUri's from the input object however I'm having trouble manipulating the object and then feeding it into Mongoose. My code reuses outputs from existing collections/documents when creating new inputs - which probably isn't ideal. This means we have "_id" & "__v" properties embedded many layers deep into a document containing nested objects/arrays. I'm pretty sure this is a big part of my issue preventing me from storing these "new" collection documents but not certain. Need to also actually verify that I have manipulated the object in this function.
+// async function injectPhotoUris(inputObject) {
+//   let injectable = inputObject;
+//   console.log("injectable: ", injectable);
+//   for (let venue of injectable.currentDiscoveryVenues) {
+//     for (let photo of venue.photos) {
+//       let photoUri = await fetch(
+//         `https://places.googleapis.com/v1/${photo.name}/media?maxHeightPx=400&maxWidthPx=400&key=${process.env.API_KEY}&skipHttpRedirect=true`,
+//       );
+//       photoUri = await photoUri.json();
+//       // console.log(photoUri);
+//       photo.photoUri = photoUri;
+//     }
+//   }
+
+//   // This step is essential. Mongoose will refuse to create the new document because it thinks it messed up and is about to mutate an existing doc.
+//   delete injectable._id;
+//   delete injectable.__v;
+//   console.log(injectable);
+//   return injectable;
+// }
 
 module.exports = discoveryRouter;

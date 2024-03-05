@@ -48,7 +48,7 @@ export default function PrimaryStations() {
             style={[
               styles.vertLineContainer,
               { backgroundColor: tubeLineColours[activeLine] },
-              { height: stations.length * 90 },
+              { height: stations.length * 103 },
             ]}
           ></View>
 
