@@ -120,10 +120,6 @@ export default function Discovery() {
       stationName: discoveryStationState.name,
       activeLine: activeLine,
     });
-    updateVisitedStations_client(await successCheck.postUpdate.visitedStations);
-    await updateVisitedVenues_client(
-      await successCheck.postUpdate.visitedVenues,
-    );
 
     // console.log("mark beta successCheck: ", successCheck);
     // console.log(
@@ -131,12 +127,17 @@ export default function Discovery() {
     //   successCheck.postUpdate.visitedVenues,
     // );
 
-    (await successCheck.success)
-      ? alert("We've checked you in!")
-      : alert("Sorry, you don't appear to be close enough...");
+    const clientAccept = await successCheck.success;
 
-    // console.log("mark delta:", await visitedVenues_client);
-    // console.log("mark delta2:", await visitedStations_client);
+    if (clientAccept) {
+      alert("We've checked you in!");
+      updateVisitedStations_client(
+        await successCheck.postUpdate.visitedStations,
+      );
+      updateVisitedVenues_client(await successCheck.postUpdate.visitedVenues);
+    } else {
+      alert("Sorry, you don't appear to be close enough...");
+    }
   }
 
   async function _handleExternalMap() {

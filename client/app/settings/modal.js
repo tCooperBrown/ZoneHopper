@@ -1,7 +1,11 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Link } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { useLineStore } from "../../components/zustand-stores";
+import {
+  useLineStore,
+  useSuccessfulVisitStore,
+} from "../../components/zustand-stores";
+import { getDiscoveryVenues } from "../../api-client-service";
 
 // import { getAllTubeLines, informPreferredLine } from "../../api-client-service";
 // import { forceDiscoverPrefetch } from "../discovery/discovery";
@@ -14,9 +18,15 @@ import { useLineStore } from "../../components/zustand-stores";
 // }));
 // Above Store might be ready for removal. COME BACK TO THIS.
 
+///////////
+
 export default function Modal() {
   // const updateAllLines = useAllLinesStore((state) => state.updateAllLines);
   const updateActiveLine = useLineStore((state) => state.updateActiveLine);
+
+  const updateVisitedStations_client = useSuccessfulVisitStore(
+    (state) => state.updateVisitedStations_client,
+  );
 
   const linesArr = [
     "bakerloo",
@@ -32,8 +42,12 @@ export default function Modal() {
     "waterloo-city",
   ];
 
-  function onPress(selectedLine) {
+  async function onPress(selectedLine) {
     updateActiveLine(selectedLine);
+
+    const { visitedStations } = await getDiscoveryVenues(selectedLine);
+
+    updateVisitedStations_client(await visitedStations);
     // informPreferredLine(selectedLine);  // NOTE IMPORTANT: This is being disabled. Review Obsidian for reasoning. Working on implementing multi-line challenges.
     // console.log("selectedLine", selectedLine);
   }

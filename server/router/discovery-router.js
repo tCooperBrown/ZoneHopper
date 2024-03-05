@@ -72,6 +72,7 @@ discoveryRouter.get("/", async (req, res) => {
           lastDiscoveryUpdate: timeStamp,
           currentDiscoveryStation: randomStation,
           currentDiscoveryVenues: nearbyVenues,
+          visitedStations: user.visitedStations,
           message: "new venues attached",
         });
       } else {
@@ -79,6 +80,7 @@ discoveryRouter.get("/", async (req, res) => {
           lastDiscoveryUpdate: timeStamp,
           currentDiscoveryStation: user.currentDiscoveryStation,
           currentDiscoveryVenues: user.currentDiscoveryVenues,
+          visitedStations: user.visitedStations,
           message: "Suggestion remains the same this week",
         });
       }

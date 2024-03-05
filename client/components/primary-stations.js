@@ -18,9 +18,9 @@ export default function PrimaryStations() {
   const visitedStations_client = useSuccessfulVisitStore(
     (state) => state.visitedStations_client,
   );
-  const visitedVenues_client = useSuccessfulVisitStore(
-    (state) => state.visitedVenues_client,
-  );
+  // const visitedVenues_client = useSuccessfulVisitStore(
+  //   (state) => state.visitedVenues_client,
+  // );
   const stations = useStationsStore((state) => state.stations);
   const updateStations = useStationsStore((state) => state.updateStations);
 
