@@ -6,6 +6,7 @@ import {
   useSuccessfulVisitStore,
 } from "../../components/zustand-stores";
 import { getDiscoveryVenues } from "../../api-client-service";
+import tubeLineColours from "../../tubeLineColours";
 
 // import { getAllTubeLines, informPreferredLine } from "../../api-client-service";
 // import { forceDiscoverPrefetch } from "../discovery/discovery";
@@ -59,7 +60,12 @@ export default function Modal() {
       {linesArr.map((line, index) => (
         <Link href={"../"} key={index} asChild>
           <Pressable onPress={() => onPress(line)}>
-            <View style={styles.stationButton}>
+            <View
+              style={[
+                styles.stationButton,
+                { backgroundColor: tubeLineColours[line] },
+              ]}
+            >
               <Text style={styles.text}>{line}</Text>
             </View>
           </Pressable>
@@ -89,7 +95,7 @@ const styles = StyleSheet.create({
     textTransform: "capitalize",
   },
   stationButton: {
-    backgroundColor: "#5758C1",
+    // backgroundColor: "#5758C1",
     borderRadius: 5,
     width: 320,
     alignItems: "center",

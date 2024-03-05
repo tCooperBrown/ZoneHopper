@@ -1,4 +1,6 @@
 import { Stack } from "expo-router";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 export default function Layout() {
   return (
     <Stack>
@@ -8,6 +10,7 @@ export default function Layout() {
           headerShown: false,
         }}
       />
+
       <Stack.Screen
         name="modal"
         options={{
