@@ -15,10 +15,22 @@ const useAllLinesStore = create((set) => ({
 // Above Store might be ready for removal. COME BACK TO THIS.
 
 export default function Modal() {
-  const allLines = useAllLinesStore((state) => state.allLines);
-  const activeLine = useLineStore((state) => state.line);
   const updateAllLines = useAllLinesStore((state) => state.updateAllLines);
   const updateActiveLine = useLineStore((state) => state.updateActiveLine);
+
+  const linesArr = [
+    "bakerloo",
+    "central",
+    "circle",
+    "district",
+    "hammersmith-city",
+    "jubilee",
+    "metropolitan",
+    "northern",
+    "piccadilly",
+    "victoria",
+    "waterloo-city",
+  ];
 
   useEffect(() => {
     function doOnce() {
@@ -43,7 +55,17 @@ export default function Modal() {
     <View style={styles.container}>
       {/* Use `../` as a simple way to navigate to the root. This is not analogous to "goBack". */}
 
-      {allLines.map((line, index) => (
+      {/* {allLines.map((line, index) => (
+        <Link href={"../"} key={index} asChild>
+          <Pressable onPress={() => onPress(line)}>
+            <View style={styles.stationButton}>
+              <Text style={styles.text}>{line}</Text>
+            </View>
+          </Pressable>
+        </Link>
+      ))} */}
+
+      {linesArr.map((line, index) => (
         <Link href={"../"} key={index} asChild>
           <Pressable onPress={() => onPress(line)}>
             <View style={styles.stationButton}>
