@@ -34,7 +34,8 @@ export default function UpperBar() {
     <>
       <View style={styles.outerContainer}>
         <Text style={styles.text}>
-          Completion: {(visitedStations_client.length / stations.length) * 100}%
+          Completion:{" "}
+          {(visitedStations_client.length / stations.length).toFixed(2) * 100}%
         </Text>
 
         <View style={styles.innerContainer}>

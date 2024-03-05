@@ -59,7 +59,6 @@ export default function PrimaryStations() {
               { height: stations.length * 103 },
             ]}
           ></View>
-          {console.log("zozo", stations)}
           {stations.map((station, index) => (
             <View style={styles.stationContainer} key={uuid4()}>
               <View style={styles.stationCircle}></View>
