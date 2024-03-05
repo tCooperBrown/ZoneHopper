@@ -2,14 +2,8 @@ import { Text, View, StyleSheet, Pressable } from "react-native";
 import { Link } from "expo-router";
 import { useLineStore } from "../../components/zustand-stores";
 
-// import { useLineStore } from "../../components/upper-bar";
-
 const SettingsScreen = () => {
   const activeLine = useLineStore((state) => state.line);
-
-  function onPress() {
-    alert("Hi");
-  }
 
   return (
     <View style={styles.container}>

@@ -154,8 +154,10 @@ export default function Discovery() {
             <View style={styles.upperBarContainer}>
               {/* Back Button */}
               <View style={styles.backButton}>
-                <Link replace href="/primary/primary">
-                  <Text style={styles.text}>Back</Text>
+                <Link replace href="/primary/primary" asChild>
+                  <Pressable>
+                    <Text style={styles.text}>Back</Text>
+                  </Pressable>
                 </Link>
               </View>
 
