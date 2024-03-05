@@ -11,6 +11,18 @@ import * as WebBrowser from "expo-web-browser";
 import { create } from "zustand";
 import { useLineStore } from "../../components/upper-bar";
 
+export const useSuccessfulVisitStore = create((set) => ({
+  visitedStations_client: [],
+
+  visitedVenues_client: [],
+
+  updateVisitedVenues_client: (newVisitedVenues) =>
+    set({ visitedVenues_client: newVisitedVenues }),
+
+  updateVisitedStations_client: (newVisitedStations) =>
+    set({ visitedStations_client: newVisitedStations }),
+}));
+
 export const useDiscoveryVenueStore = create((set) => ({
   discoveryVenues: [],
   updateDiscoveryVenues: (newDiscoveryVenue) =>
@@ -81,44 +93,6 @@ export default function Discovery() {
     };
 
     fetchDiscoveryData();
-
-    // (async () => {
-    //   let { status } = await Location.requestForegroundPermissionsAsync();
-    //   if (status !== "granted") {
-    //     setErrorMsg("Permission to access location was denied");
-    //     return;
-    //   }
-    //   // console.log("activeLine", activeLine);
-    //   const { currentDiscoveryVenues, currentDiscoveryStation } =
-    //     await getDiscoveryVenues(activeLine);
-
-    //   // console.log("useeffect currentDiscoveryVenues: ", currentDiscoveryVenues);
-    //   // console.log(
-    //   //   "useeffect currendtDiscoveryStation: ",
-    //   //   currentDiscoveryStation,
-    //   // );
-
-    //   // This will be accessible as an array of venues ranked by popularity.
-    //   updateDiscoveryVenues([...(await currentDiscoveryVenues)]);
-    //   // This will be directly accessible as a single station Object.
-    //   updateDiscoveryStationState(await currentDiscoveryStation);
-    //   setRegion({
-    //     latitude: await currentDiscoveryVenues[0].latitude,
-    //     longitude: await currentDiscoveryVenues[0].longitude,
-    //     latitudeDelta: 0.01,
-    //     longitudeDelta: 0.01,
-    //   });
-
-    //   // console.log("currentDiscoveryVenues: ", currentDiscoveryVenues);
-    //   // console.log("\ncurrentDiscoveryStation: ", currentDiscoveryStation);
-    //   // console.log(currentDiscoveryVenues[0].location);
-    //   // console.log(discoveryStationState);
-    //   // console.log(discoveryVenueState[0].displayName);
-
-    //   // console.log("discoveryVenueState: ", await discoveryVenueState);
-
-    //   // console.log("\nregion", region);
-    // })();
   }, []);
 
   // I'm going to update this. The backend now starts the clock at any given day/time. Counting days of the week here needs to go.
@@ -143,12 +117,15 @@ export default function Discovery() {
       lon: location.coords.longitude,
       venueLat: discoveryVenueState[0].latitude,
       venueLon: discoveryVenueState[0].longitude,
+      venueName: discoveryVenueState[0].displayName,
+      stationName: discoveryStationState.name,
+      activeLine: activeLine,
     });
 
     // let outcome = await successCheck.json();
     // console.log("discoveryStationState line 148: ", discoveryStationState);
 
-    (await successCheck)
+    (await successCheck.success)
       ? alert("We've checked you in!")
       : alert("Sorry, you don't appear to be close enough...");
   }

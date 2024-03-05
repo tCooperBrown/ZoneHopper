@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
   currentDiscoveryStation: { type: Object },
   currentDiscoveryVenues: { type: Object },
   visitedStations: { type: Array },
+  visitedVenues: { type: Array },
   activeLine: { type: String },
 });
 

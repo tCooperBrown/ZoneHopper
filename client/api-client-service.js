@@ -51,11 +51,15 @@ export async function validateCheckIn(coordData) {
       lon: coordData.lon,
       venueLon: coordData.venueLon,
       venueLat: coordData.venueLat,
+      venueName: coordData.venueName,
+      stationName: coordData.stationName,
+      activeLine: coordData.activeLine,
     }),
   });
 
   let parsedRes = await res.json();
-  return parsedRes.success;
+  console.log("mark beta parsedRes: ", parsedRes);
+  return parsedRes;
 }
 
 // I'm going to get the stationLon, stationLat from the backend rather than doing it here.

@@ -37,6 +37,7 @@ discoveryRouter.get("/", async (req, res) => {
         currentDiscoveryStation: randomStation,
         currentDiscoveryVenues: nearbyVenues,
         visitedStations: [],
+        visitedVenues: [],
         activeLine: req.query.activeLine,
       });
 

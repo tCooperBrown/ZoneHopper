@@ -223,7 +223,8 @@ async function retrieveCachedStations(req, res) {
 
 async function validateCoordSubmission(req, res) {
   try {
-    const { venueLon, venueLat, lat, lon } = req.body;
+    const { venueLon, venueLat, lat, lon, venueName, stationName, activeLine } =
+      req.body;
     console.log("venueLon", venueLon), console.log("venueLat", venueLat);
     // console.log(req.body);
     // console.log(venueCoords);
@@ -242,7 +243,32 @@ async function validateCoordSubmission(req, res) {
     ) {
       try {
         console.log("success & venueCoords: ", { venueLat, venueLon });
-        res.json({ success: true });
+        console.log("mark alpha: venueName", venueName);
+        console.log("mark alpha: stationName", stationName);
+
+        await User.findOneAndUpdate(
+          {
+            activeLine: activeLine,
+          },
+          {
+            $addToSet: { visitedStations: stationName },
+          },
+        );
+
+        let postUpdate = await User.findOneAndUpdate(
+          {
+            activeLine: activeLine,
+          },
+          {
+            $addToSet: { visitedVenues: venueName },
+          },
+        );
+
+        console.log("mark alpha postupdate: ", postUpdate);
+
+        res.json({ success: true, postUpdate: postUpdate });
+
+        // console.log("mark alpha user find", await User.find({}));
       } catch (error) {
         console.error(error);
         res.status(400).json({ success: false });
