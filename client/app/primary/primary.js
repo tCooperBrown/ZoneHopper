@@ -23,8 +23,11 @@ const PrimaryScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 15,
+    paddingLeft: 15,
+    paddingRight: 15,
     backgroundColor: "#000439",
-    height: "102%",
+    height: "102.1%",
   },
 });
 export default PrimaryScreen;

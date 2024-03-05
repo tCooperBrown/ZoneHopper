@@ -62,8 +62,6 @@ export default function Discovery() {
 
   const activeLine = useLineStore((state) => state.line);
 
-  // console.log("discovery venue state", discoveryVenueState);
-
   useEffect(() => {
     const fetchDiscoveryData = async () => {
       setIsLoading(true);
@@ -202,7 +200,7 @@ export default function Discovery() {
                   ? discoveryVenueState[0]?.displayName || ""
                   : ""}
               </Text>
-              <Text style={[styles.text, { fontWeight: "500" }]}>
+              <Text style={[styles.text, { fontWeight: "300", fontSize: 20 }]}>
                 {discoveryVenueState.length > 0
                   ? discoveryVenueState[0]?.editorialSummary || ""
                   : ""}
@@ -254,11 +252,9 @@ export default function Discovery() {
 const styles = StyleSheet.create({
   bottomBar: {
     flexDirection: "row",
-    // backgroundColor: "#040FAB",
     justifyContent: "center",
   },
   checkInButton: {
-    // backgroundColor: "#7C7CCC",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,

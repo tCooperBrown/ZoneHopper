@@ -22,7 +22,6 @@ export default function UpperBar() {
 
   const circleSize = 40;
   const circleRadius = circleSize / 2;
-  console.log("stations11", stations);
 
   return (
     <>
@@ -82,7 +81,9 @@ export default function UpperBar() {
       <View style={styles.streakContainer}>
         <Text style={[styles.text, { paddingTop: 5 }]}>Streak: </Text>
         <View style={styles.dynamicStreak}>
-          <Text style={[styles.text, { color: "#000" }]}>{streak} weeks</Text>
+          <Text style={[styles.text, { fontWeight: "400" }]}>
+            {streak} weeks
+          </Text>
         </View>
       </View>
     </>
@@ -93,24 +94,17 @@ const styles = StyleSheet.create({
   outerContainer: {
     flexDirection: "column",
     alignItems: "flex-start",
-    paddingLeft: 20,
     gap: 5,
-    paddingTop: 5,
   },
   innerContainer: {
     flexDirection: "row",
-    // backgroundColor: "white",
-    paddingRight: 20,
   },
   activeLine: {
-    // height: 20,
-    // width: 70,
     justifyContent: "center",
     paddingLeft: 20,
     paddingRight: 20,
     borderRadius: 5,
     marginLeft: 10,
-    // backgroundColor: "#8b4e26",
   },
   settings: {
     flexGrow: 1,
@@ -121,15 +115,13 @@ const styles = StyleSheet.create({
   streakContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    marginTop: 10,
-    paddingRight: 20,
   },
   dynamicStreak: {
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 5,
     paddingBottom: 5,
-    backgroundColor: "#95e9f1",
+    backgroundColor: "#4C83C2",
     borderRadius: 5,
   },
   text: {
@@ -137,30 +129,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 22,
     textTransform: "capitalize",
-    // backgroundColor: "red",
   },
 });
-
-{
-  /* <Pressable style={styles.settings}>
-  <Text style={styles.textSettings}>...</Text>
-</Pressable>; */
-}
-
-//   settings: {
-//     width: "8%",
-//     height: "100%",
-//     alignItems: "center",
-//     justifyContent: "center",
-//     backgroundColor: "blue",
-//     flexDirection: "row",
-//     borderRadius: 10,
-//   },
-//   textSettings: {
-//     textAlign: "right",
-//     color: "#FFF",
-//   },
-//   text: {
-//     color: "#FFF",
-//     textAlign: "center",
-//   },
