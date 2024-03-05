@@ -2,44 +2,40 @@
 import { Link } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import Svg, { Circle } from "react-native-svg";
-import { create } from "zustand";
 import tubeLineColours from "../tubeLineColours";
-import { informPreferredLine } from "../api-client-service";
-import { useEffect } from "react";
+import {
+  useCompletionStore,
+  useLineStore,
+  useStationsStore,
+  useStreakStore,
+  useSuccessfulVisitStore,
+} from "./zustand-stores";
 
-export const useStreakStore = create((set) => ({
-  streak: 0,
-  incrementStreak: () =>
-    set((state) => ({
-      streak: state.streak + 1,
-    })),
-  clearStreak: () => set({ streak: 0 }),
-}));
+// import { useEffect } from "react";
+// import { informPreferredLine } from "../api-client-service";
+// import { useSuccessfulVisitStore } from "../app/discovery/discovery";
+// import { useStationsStore } from "../app/index";
+// import { create } from "zustand";
 
-export const useLineStore = create((set) => ({
-  line: "bakerloo",
-  updateActiveLine: (newLine) => set({ line: newLine }),
-}));
-
-export const useCompletionStore = create((set) => ({
-  percentage: 0,
-  increasePercentage: () =>
-    set((state) => ({ percentage: state.percentage + 1 })),
-  clearPercentage: () => set({ percentage: 0 }),
-  updatePercentage: (newPercentage) => set({ percentage: newPercentage }),
-}));
 export default function UpperBar() {
+  const stations = useStationsStore((state) => state.stations);
+  const visitedStations_client = useSuccessfulVisitStore(
+    (state) => state.visitedStations_client,
+  );
   const percentage = useCompletionStore((state) => state.percentage);
   const line = useLineStore((state) => state.line);
   const streak = useStreakStore((state) => state.streak);
 
   const circleSize = 40;
   const circleRadius = circleSize / 2;
+  console.log("stations11", stations);
 
   return (
     <>
       <View style={styles.outerContainer}>
-        <Text style={styles.text}>Completion: {percentage}%</Text>
+        <Text style={styles.text}>
+          Completion: {(visitedStations_client.length / stations.length) * 100}%
+        </Text>
 
         <View style={styles.innerContainer}>
           <Text style={[styles.text, { paddingTop: 5 }]}>Line: </Text>

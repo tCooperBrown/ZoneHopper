@@ -1,19 +1,18 @@
 import { StyleSheet, Text, View } from "react-native";
-import { create } from "zustand";
-import { useLineStore } from "./upper-bar";
 import tubeLineColours from "../tubeLineColours";
 import { ScrollView } from "react-native";
 import { fetchOrderedArrayOfStations } from "../api-client-service";
 import { useEffect } from "react";
 import "react-native-get-random-values";
 import { v4 as uuid4 } from "uuid";
-import { useSuccessfulVisitStore } from "../app/discovery/discovery";
-
-export const useStationsStore = create((set) => ({
-  stations: [],
-  updateStations: (newStationsArray) => set({ stations: newStationsArray }),
-  clearStations: () => set({ stations: [] }),
-}));
+import {
+  useLineStore,
+  useStationsStore,
+  useSuccessfulVisitStore,
+} from "./zustand-stores";
+// import { useLineStore } from "./upper-bar";
+// import { useSuccessfulVisitStore } from "../app/discovery/discovery";
+// import { useStationsStore } from "../app";
 
 export default function PrimaryStations() {
   const visitedStations_client = useSuccessfulVisitStore(

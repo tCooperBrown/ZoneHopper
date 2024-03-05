@@ -1,10 +1,12 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { useStore } from "zustand";
+// import { useStore } from "zustand";
+// import { create } from "zustand";
 
 import UpperBar from "../../components/upper-bar";
 import PrimaryStations from "../../components/primary-stations";
 import DiscoveryButton from "../../components/discovery-button";
+// import { useStationsStore } from "..";
 
 const PrimaryScreen = () => {
   return (

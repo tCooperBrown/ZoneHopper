@@ -1,21 +1,21 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { create } from "zustand";
-import { useLineStore } from "../../components/upper-bar";
-import { getAllTubeLines, informPreferredLine } from "../../api-client-service";
-import { useEffect } from "react";
-import { forceDiscoverPrefetch } from "../discovery/discovery";
+import { useLineStore } from "../../components/zustand-stores";
 
-const useAllLinesStore = create((set) => ({
-  allLines: ["test1", "test2", "test3"],
-  updateAllLines: (newLinesArray) => set({ allLines: newLinesArray }),
-  clearLines: () => set({ allLines: [] }),
-}));
+// import { getAllTubeLines, informPreferredLine } from "../../api-client-service";
+// import { forceDiscoverPrefetch } from "../discovery/discovery";
+// import { useLineStore } from "../../components/upper-bar";
+
+// const useAllLinesStore = create((set) => ({
+//   allLines: ["test1", "test2", "test3"],
+//   updateAllLines: (newLinesArray) => set({ allLines: newLinesArray }),
+//   clearLines: () => set({ allLines: [] }),
+// }));
 // Above Store might be ready for removal. COME BACK TO THIS.
 
 export default function Modal() {
-  const updateAllLines = useAllLinesStore((state) => state.updateAllLines);
+  // const updateAllLines = useAllLinesStore((state) => state.updateAllLines);
   const updateActiveLine = useLineStore((state) => state.updateActiveLine);
 
   const linesArr = [
@@ -32,17 +32,6 @@ export default function Modal() {
     "waterloo-city",
   ];
 
-  useEffect(() => {
-    function doOnce() {
-      getAllTubeLines()
-        .then((res) => {
-          updateAllLines([...res]);
-        })
-        .catch((err) => console.error(err));
-    }
-    doOnce();
-  }, []);
-
   function onPress(selectedLine) {
     updateActiveLine(selectedLine);
     // informPreferredLine(selectedLine);  // NOTE IMPORTANT: This is being disabled. Review Obsidian for reasoning. Working on implementing multi-line challenges.
@@ -53,18 +42,6 @@ export default function Modal() {
   // a full screen page. You may need to change the UI to account for this.
   return (
     <View style={styles.container}>
-      {/* Use `../` as a simple way to navigate to the root. This is not analogous to "goBack". */}
-
-      {/* {allLines.map((line, index) => (
-        <Link href={"../"} key={index} asChild>
-          <Pressable onPress={() => onPress(line)}>
-            <View style={styles.stationButton}>
-              <Text style={styles.text}>{line}</Text>
-            </View>
-          </Pressable>
-        </Link>
-      ))} */}
-
       {linesArr.map((line, index) => (
         <Link href={"../"} key={index} asChild>
           <Pressable onPress={() => onPress(line)}>
@@ -74,8 +51,6 @@ export default function Modal() {
           </Pressable>
         </Link>
       ))}
-
-      {/* {!hasChosen && <Link href="../"></Link>} */}
 
       {/* Native modals have dark backgrounds on iOS, set the status bar to light content. */}
       <StatusBar style="light" />
@@ -107,5 +82,3 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
 });
-
-// { flex: 1, alignItems: "center", justifyContent: "center" }

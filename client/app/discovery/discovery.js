@@ -4,32 +4,19 @@ import MapView from "react-native-maps";
 import { Link } from "expo-router";
 import { Image } from "expo-image";
 import { Text, View, StyleSheet, Button, Pressable } from "react-native";
-import { useFonts, Montserrat_400Regular } from "@expo-google-fonts/montserrat";
 import { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import * as WebBrowser from "expo-web-browser";
-import { create } from "zustand";
-import { useLineStore } from "../../components/upper-bar";
+import {
+  useDiscoveryStationStore,
+  useDiscoveryVenueStore,
+  useLineStore,
+  useSuccessfulVisitStore,
+} from "../../components/zustand-stores";
 
-export const useSuccessfulVisitStore = create((set) => ({
-  visitedStations_client: [],
-  visitedVenues_client: [],
-  updateVisitedVenues_client: (newVisitedVenues) =>
-    set({ visitedVenues_client: newVisitedVenues }),
-  updateVisitedStations_client: (newVisitedStations) =>
-    set({ visitedStations_client: newVisitedStations }),
-}));
-
-export const useDiscoveryVenueStore = create((set) => ({
-  discoveryVenues: [],
-  updateDiscoveryVenues: (newDiscoveryVenue) =>
-    set({ discoveryVenues: newDiscoveryVenue }),
-}));
-export const useDiscoveryStationStore = create((set) => ({
-  discoveryStation: [],
-  updateDiscoveryStation: (newDiscoveryStation) =>
-    set({ discoveryStation: newDiscoveryStation }),
-}));
+// import { create } from "zustand";
+// import { useLineStore } from "../../components/upper-bar";
+// import { useFonts, Montserrat_400Regular } from "@expo-google-fonts/montserrat";
 
 export default function Discovery() {
   const [isLoading, setIsLoading] = useState(true);

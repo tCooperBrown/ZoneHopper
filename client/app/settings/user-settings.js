@@ -1,6 +1,8 @@
-import { Text, View, Button, StyleSheet, Pressable } from "react-native";
-import { Link, useRouter } from "expo-router";
-import { useLineStore } from "../../components/upper-bar";
+import { Text, View, StyleSheet, Pressable } from "react-native";
+import { Link } from "expo-router";
+import { useLineStore } from "../../components/zustand-stores";
+
+// import { useLineStore } from "../../components/upper-bar";
 
 const SettingsScreen = () => {
   const activeLine = useLineStore((state) => state.line);
