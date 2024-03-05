@@ -6,6 +6,18 @@ const Venue = require("../model/venue");
 const User = require("../model/user");
 require("dotenv").config();
 
+async function generatePhotoUri(req, res) {
+  const { photoName } = req.query;
+
+  let photoUri = await fetch(
+    `https://places.googleapis.com/v1/${photoName}/media?maxHeightPx=400&maxWidthPx=400&key=${process.env.API_KEY}&skipHttpRedirect=true`,
+  );
+
+  photoUri = await photoUri.json();
+
+  res.json(photoUri.photoUri);
+}
+
 async function updateUserLine(req, res) {
   const { activeLine } = req.body;
   // console.log(activeLine);
@@ -401,6 +413,7 @@ module.exports = {
   validateCoordSubmission,
   getNearbyVenues,
   updateUserLine,
+  generatePhotoUri,
 };
 
 // 1. Check venues collection for any docs against "assignedStation".

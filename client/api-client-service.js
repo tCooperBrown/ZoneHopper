@@ -3,6 +3,14 @@ const tflBASE_URL = "https://api.tfl.gov.uk";
 
 // https://theoxps.tail3a919.ts.net/
 
+export async function generatePhotoUri(photoResourceName) {
+  return (
+    await fetch(
+      `${BASE_URL}/venue-pool/photoUri?photoName=${photoResourceName}`,
+    )
+  ).json();
+}
+
 export async function fetchOrderedArrayOfStations(line) {
   let stations = await fetch(
     `${BASE_URL}/tube-stations?orderBy=inboundOrder&tflLine=${line}&direction=asc`,

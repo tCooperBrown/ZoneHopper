@@ -1,4 +1,8 @@
-import { getDiscoveryVenues, validateCheckIn } from "../../api-client-service";
+import {
+  generatePlacesPhotoUri,
+  getDiscoveryVenues,
+  validateCheckIn,
+} from "../../api-client-service";
 import React, { useEffect, useState } from "react";
 import MapView from "react-native-maps";
 import { Link } from "expo-router";
@@ -13,14 +17,12 @@ import {
   useLineStore,
   useSuccessfulVisitStore,
 } from "../../components/zustand-stores";
-
-// import { create } from "zustand";
-// import { useLineStore } from "../../components/upper-bar";
-// import { useFonts, Montserrat_400Regular } from "@expo-google-fonts/montserrat";
+import { generatePhotoUri } from "../../api-client-service";
 
 export default function Discovery() {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
+  const [photoUri, setPhotoUri] = useState("");
   const [result, setResult] = useState(null);
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -83,9 +85,15 @@ export default function Discovery() {
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         });
+
+        const newPhotoUri = await generatePhotoUri(
+          currentDiscoveryVenues[0].photos[0].name,
+        );
+
+        setPhotoUri(await newPhotoUri);
       } catch (error) {
         setLoadError("Failed to fetch discovery challenge. Please try again.");
-        console.error("error line 77", error);
+        console.error(error);
       } finally {
         setIsLoading(false);
       }
@@ -104,7 +112,7 @@ export default function Discovery() {
   dayDictionary.set("5", 3);
   dayDictionary.set("6", 2);
 
-  const imageURL = "https://picsum.photos/seed/696/3000/2000";
+  // const photoUri = "https://picsum.photos/seed/696/3000/2000";
 
   async function onPress() {
     // console.log("discoveryVenueState line 149: ", discoveryVenueState);
@@ -120,12 +128,6 @@ export default function Discovery() {
       stationName: discoveryStationState.name,
       activeLine: activeLine,
     });
-
-    // console.log("mark beta successCheck: ", successCheck);
-    // console.log(
-    //   "mark beta2 successCheck: ",
-    //   successCheck.postUpdate.visitedVenues,
-    // );
 
     const clientAccept = await successCheck.success;
 
@@ -203,7 +205,7 @@ export default function Discovery() {
             </View>
             {/* Restaurant Images */}
             <View style={styles.imageContainer}>
-              <Image style={styles.image} source={imageURL} />
+              <Image style={styles.image} source={{ uri: photoUri }} />
             </View>
             {/* Check In Button! */}
 
@@ -269,7 +271,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: "100%",
-    height: "50%",
+    height: "40%",
   },
   restaurantDescriptionContainer: {
     height: "23%",
@@ -280,11 +282,10 @@ const styles = StyleSheet.create({
   image: {
     flex: 1,
     width: "100%",
-    backgroundColor: "black",
+    height: "100%",
   },
   imageContainer: {
     flex: 1,
     width: "100%",
-    backgroundColor: "pink",
   },
 });
