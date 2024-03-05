@@ -13,12 +13,9 @@ import { useLineStore } from "../../components/upper-bar";
 
 export const useSuccessfulVisitStore = create((set) => ({
   visitedStations_client: [],
-
   visitedVenues_client: [],
-
   updateVisitedVenues_client: (newVisitedVenues) =>
     set({ visitedVenues_client: newVisitedVenues }),
-
   updateVisitedStations_client: (newVisitedStations) =>
     set({ visitedStations_client: newVisitedStations }),
 }));
@@ -58,6 +55,21 @@ export default function Discovery() {
   const discoveryStationState = useDiscoveryStationStore(
     (state) => state.discoveryStation,
   );
+
+  const updateVisitedStations_client = useSuccessfulVisitStore(
+    (state) => state.updateVisitedStations_client,
+  );
+  const updateVisitedVenues_client = useSuccessfulVisitStore(
+    (state) => state.updateVisitedVenues_client,
+  );
+
+  const visitedStations_client = useSuccessfulVisitStore(
+    (state) => state.visitedStations_client,
+  );
+  const visitedVenues_client = useSuccessfulVisitStore(
+    (state) => state.visitedVenues_client,
+  );
+
   const activeLine = useLineStore((state) => state.line);
 
   // console.log("discovery venue state", discoveryVenueState);
@@ -121,13 +133,23 @@ export default function Discovery() {
       stationName: discoveryStationState.name,
       activeLine: activeLine,
     });
+    updateVisitedStations_client(await successCheck.postUpdate.visitedStations);
+    await updateVisitedVenues_client(
+      await successCheck.postUpdate.visitedVenues,
+    );
 
-    // let outcome = await successCheck.json();
-    // console.log("discoveryStationState line 148: ", discoveryStationState);
+    // console.log("mark beta successCheck: ", successCheck);
+    // console.log(
+    //   "mark beta2 successCheck: ",
+    //   successCheck.postUpdate.visitedVenues,
+    // );
 
     (await successCheck.success)
       ? alert("We've checked you in!")
       : alert("Sorry, you don't appear to be close enough...");
+
+    // console.log("mark delta:", await visitedVenues_client);
+    // console.log("mark delta2:", await visitedStations_client);
   }
 
   async function _handleExternalMap() {

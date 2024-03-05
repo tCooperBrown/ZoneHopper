@@ -7,6 +7,7 @@ import { fetchOrderedArrayOfStations } from "../api-client-service";
 import { useEffect } from "react";
 import "react-native-get-random-values";
 import { v4 as uuid4 } from "uuid";
+import { useSuccessfulVisitStore } from "../app/discovery/discovery";
 
 export const useStationsStore = create((set) => ({
   stations: [],
@@ -15,6 +16,12 @@ export const useStationsStore = create((set) => ({
 }));
 
 export default function PrimaryStations() {
+  const visitedStations_client = useSuccessfulVisitStore(
+    (state) => state.visitedStations_client,
+  );
+  const visitedVenues_client = useSuccessfulVisitStore(
+    (state) => state.visitedVenues_client,
+  );
   const stations = useStationsStore((state) => state.stations);
   const updateStations = useStationsStore((state) => state.updateStations);
 
@@ -31,6 +38,8 @@ export default function PrimaryStations() {
         .catch((err) => console.error(err));
     };
     doOnce();
+    // console.log("primA:", visitedStations_client);
+    // console.log("primB:", visitedVenues_client);
   }, []);
 
   ///////////////// Call Below to test ////////////////
@@ -51,11 +60,18 @@ export default function PrimaryStations() {
               { height: stations.length * 103 },
             ]}
           ></View>
-
+          {console.log("zozo", stations)}
           {stations.map((station, index) => (
             <View style={styles.stationContainer} key={uuid4()}>
               <View style={styles.stationCircle}></View>
-              <View style={styles.stationName}>
+              <View
+                style={[
+                  styles.stationName,
+                  visitedStations_client.includes(station.name)
+                    ? { backgroundColor: "green" }
+                    : {},
+                ]}
+              >
                 <Text style={[styles.text, { fontWeight: "500" }]}>
                   {station.name}
                 </Text>
