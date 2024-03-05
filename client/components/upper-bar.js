@@ -11,12 +11,6 @@ import {
   useSuccessfulVisitStore,
 } from "./zustand-stores";
 
-// import { useEffect } from "react";
-// import { informPreferredLine } from "../api-client-service";
-// import { useSuccessfulVisitStore } from "../app/discovery/discovery";
-// import { useStationsStore } from "../app/index";
-// import { create } from "zustand";
-
 export default function UpperBar() {
   const stations = useStationsStore((state) => state.stations);
   const visitedStations_client = useSuccessfulVisitStore(
@@ -93,16 +87,6 @@ export default function UpperBar() {
       </View>
     </>
   );
-}
-
-{
-  /* <View>
-  <Text>Settings component is working!</Text>
-  <Button
-    title="Go back to primary view"
-    onPress={() => navigation.navigate("Primary")}
-  ></Button>
-</View>; */
 }
 
 const styles = StyleSheet.create({
